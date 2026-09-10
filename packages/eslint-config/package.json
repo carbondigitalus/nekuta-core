@@ -1,0 +1,29 @@
+{
+    "name": "@nekuta/eslint-config",
+    "version": "0.0.0",
+    "type": "module",
+    "private": true,
+    "exports": {
+        "./base": {
+            "types": "./src/base.d.ts",
+            "default": "./src/base.mjs"
+        },
+        "./nest-js": {
+            "types": "./src/nest.d.ts",
+            "default": "./src/nest.mjs"
+        },
+        "./next-js": {
+            "types": "./src/next.d.ts",
+            "default": "./src/next.mjs"
+        }
+    },
+    "devDependencies": {
+        "@eslint/eslintrc": "^3.3.1",
+        "@typescript-eslint/eslint-plugin": "^8.40.0",
+        "@typescript-eslint/parser": "^8.40.0",
+        "eslint": "^9.34.0",
+        "eslint-config-next": "15.5.7",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-prettier": "^5.5.4"
+    }
+}
