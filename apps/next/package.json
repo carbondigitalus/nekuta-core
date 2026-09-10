@@ -1,0 +1,45 @@
+{
+    "name": "@nekuta/next",
+    "version": "0.0.1",
+    "private": false,
+    "license": "MIT",
+    "description": "Next.js adapter for Nekuta — SSR/hydration support for the Pages Router and App Router.",
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsc -b -v",
+        "test:unit": "jest --coverage --passWithNoTests --config jest.config.ts",
+        "test:watch": "jest --coverage --watch --passWithNoTests --config jest.config.ts",
+        "typecheck": "tsc --noEmit"
+    },
+    "peerDependencies": {
+        "@nekuta/core": "*",
+        "next": "^15.0.0 || ^16.0.0",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0"
+    },
+    "devDependencies": {
+        "@nekuta/core": "file:../nekuta",
+        "@nekuta/jest-config": "file:../../packages/jest-config",
+        "@nekuta/typescript-config": "*",
+        "@types/jest": "^30.0.0",
+        "@types/react": "19.1.11",
+        "@types/react-dom": "19.1.7",
+        "jest": "^30.1.3",
+        "next": "^15.5.0",
+        "react": "^19.1.1",
+        "react-dom": "^19.1.1",
+        "ts-jest": "^29.4.4",
+        "typescript": "^5.9.2"
+    }
+}
