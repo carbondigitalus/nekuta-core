@@ -12,7 +12,7 @@ function renderDemo() {
 }
 
 describe('CounterDemo', () => {
-    it('renders both the functional and class-component bindings, sharing one store', () => {
+    it('renders all three bindings, sharing one store', () => {
         renderDemo();
 
         expect(
@@ -21,11 +21,15 @@ describe('CounterDemo', () => {
         expect(
             screen.getByText('Class component — connectStore()')
         ).toBeInTheDocument();
+        expect(
+            screen.getByText('Class component — static stores')
+        ).toBeInTheDocument();
         expect(screen.getByTestId('functional-count')).toHaveTextContent('0');
         expect(screen.getByTestId('class-count')).toHaveTextContent('0');
+        expect(screen.getByTestId('static-class-count')).toHaveTextContent('0');
     });
 
-    it('a click on the functional binding updates the class binding too (same store)', () => {
+    it('a click on the functional binding updates both class bindings too (same store)', () => {
         renderDemo();
 
         act(() => {
@@ -34,5 +38,20 @@ describe('CounterDemo', () => {
 
         expect(screen.getByTestId('functional-count')).toHaveTextContent('1');
         expect(screen.getByTestId('class-count')).toHaveTextContent('1');
+        expect(screen.getByTestId('static-class-count')).toHaveTextContent('1');
+    });
+
+    it('a click on the static-stores class binding updates the other two too', () => {
+        renderDemo();
+
+        act(() => {
+            screen.getByText('+10').click();
+        });
+
+        expect(screen.getByTestId('functional-count')).toHaveTextContent('10');
+        expect(screen.getByTestId('class-count')).toHaveTextContent('10');
+        expect(screen.getByTestId('static-class-count')).toHaveTextContent(
+            '10'
+        );
     });
 });

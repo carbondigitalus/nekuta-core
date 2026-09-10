@@ -50,7 +50,36 @@ class CounterClassComponent extends Component {
 
 const ConnectedCounter = connectStore(counterStoreMap, CounterClassComponent);
 
-/** Both bindings share the SAME `counter` store — mutating one updates the other. */
+/** Same idea as CounterClassComponent, but the map lives as a `static` on the class itself
+ *  instead of a free-standing const — the other of the two equivalent connectStore() forms. */
+class CounterStaticStoresComponent extends Component {
+    static stores = { counter: useCounterStore };
+    declare store: MappedStores<typeof CounterStaticStoresComponent.stores>;
+
+    override render() {
+        const { counter } = this.store;
+        return (
+            <div className="card">
+                <h3>Class component — static stores</h3>
+                <p>
+                    count:{' '}
+                    <strong data-testid="static-class-count">
+                        {counter.count}
+                    </strong>{' '}
+                    · doubleCount: <strong>{counter.doubleCount}</strong>
+                </p>
+                <div className="buttons">
+                    <button onClick={() => counter.increment(10)}>+10</button>
+                    <button onClick={() => counter.decrement(10)}>-10</button>
+                </div>
+            </div>
+        );
+    }
+}
+
+const ConnectedStaticCounter = connectStore(CounterStaticStoresComponent);
+
+/** All three bindings share the SAME `counter` store — mutating one updates the other two. */
 export function CounterDemo() {
     return (
         <section>
@@ -58,6 +87,7 @@ export function CounterDemo() {
             <div className="demo-grid">
                 <CounterFunctional />
                 <ConnectedCounter />
+                <ConnectedStaticCounter />
             </div>
         </section>
     );
