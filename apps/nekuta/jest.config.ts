@@ -13,7 +13,7 @@ const config: Config.InitialOptions = {
         '/coverage/',
         '/dist/',
         'index.ts',
-        '**/*.d.ts'
+        '\\.d\\.ts$'
     ],
     coverageReporters: ['html', 'json', 'lcov', 'text-summary']
 };
