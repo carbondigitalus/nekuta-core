@@ -1,9 +1,0 @@
-packages:
-  - 'packages/*'
-shamefullyHoist: true
-strictPeerDependencies: false
-allowBuilds:
-  esbuild: true
-  simple-git-hooks: true
-  vue-demi: true
-  '@parcel/watcher': false
