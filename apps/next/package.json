@@ -17,7 +17,7 @@
         "dist"
     ],
     "scripts": {
-        "build": "tsc -b -v",
+        "build": "tsc -b -v tsconfig.build.json",
         "test:unit": "jest --coverage --passWithNoTests --config jest.config.ts",
         "test:watch": "jest --coverage --watch --passWithNoTests --config jest.config.ts",
         "typecheck": "tsc --noEmit"

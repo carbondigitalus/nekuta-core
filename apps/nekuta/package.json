@@ -1,10 +1,11 @@
 {
     "name": "@nekuta/core",
-    "version": "0.0.1",
+    "version": "0.1.0-alpha.0",
     "private": false,
     "license": "MIT",
     "description": "A React store ecosystem based on Vue's Pinia store.",
     "type": "module",
+    "sideEffects": false,
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "exports": {
@@ -16,11 +17,15 @@
     "files": [
         "dist"
     ],
+    "sizeLimit": {
+        "gzipBytes": 20000
+    },
     "scripts": {
-        "build": "tsc -b -v",
+        "build": "tsc -b -v tsconfig.build.json",
         "test:unit": "jest --coverage --passWithNoTests --config jest.config.ts",
         "test:watch": "jest --coverage --watch --passWithNoTests --config jest.config.ts",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "size": "node scripts/check-size.mjs"
     },
     "peerDependencies": {
         "react": "^19.0.0",

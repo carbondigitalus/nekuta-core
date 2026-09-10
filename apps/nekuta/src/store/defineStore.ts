@@ -244,12 +244,17 @@ function createOptionsStore<
     function setup(): Record<string, unknown> {
         // `nekuta.state.value[id]` was already pre-seeded to `{}` by createSetupStore before this
         // runs, so a `!nekuta.state.value[id]` guard here would never fire (`{}` is truthy) and
-        // `state()`'s result would never actually get written — merge into it instead of
-        // conditionally replacing it.
-        Object.assign(
-            nekuta.state.value[id] as object,
-            state ? state() : ({} as S)
-        );
+        // `state()`'s result would never actually get written. But a blind `Object.assign` isn't
+        // right either — it would clobber state a Next.js adapter already hydrated here (via
+        // hydrateNekutaState()) before this store was first resolved. Only fill in keys that
+        // aren't already present.
+        const existingState = nekuta.state.value[id] as StateTree;
+        const defaultState = state ? state() : ({} as S);
+        for (const key of Object.keys(defaultState)) {
+            if (!(key in existingState)) {
+                existingState[key] = (defaultState as StateTree)[key];
+            }
+        }
 
         const localState = reactive(
             nekuta.state.value[id] as object
