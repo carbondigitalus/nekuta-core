@@ -1,0 +1,27 @@
+{
+    "name": "@nekuta/utils",
+    "version": "0.0.0",
+    "private": true,
+    "license": "UNLICENSED",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "scripts": {
+        "build": "tsc -b -v",
+        "test:unit": "jest --coverage --passWithNoTests --config jest.config.ts",
+        "test:watch": "jest --coverage --watch --passWithNoTests --config jest.config.ts",
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "class-transformer": "^0.5.1",
+        "class-validator": "^0.14.2",
+        "reflect-metadata": "^0.2.2"
+    },
+    "devDependencies": {
+        "@nekuta/jest-config": "file:../../packages/jest-config",
+        "@nekuta/typescript-config": "*",
+        "@types/jest": "^30.0.0",
+        "jest": "^30.0.5",
+        "ts-jest": "^29.4.1",
+        "typescript": "^5.9.2"
+    }
+}

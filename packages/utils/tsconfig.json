@@ -1,0 +1,12 @@
+{
+    "extends": "@nekuta/typescript-config/base.json",
+    "compilerOptions": {
+        "composite": true,
+        "declaration": true,
+        "experimentalDecorators": true,
+        "module": "commonjs",
+        "outDir": "./dist",
+        "rootDir": "./src"
+    },
+    "include": ["src"]
+}
