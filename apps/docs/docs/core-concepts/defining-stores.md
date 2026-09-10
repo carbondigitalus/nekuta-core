@@ -34,8 +34,8 @@ export const useCounterStore = defineStore({
 The style Pinia's `<script setup>` stores use: a function that builds and returns refs, computed values, and plain functions.
 
 ```ts
-import { ref, computed } from 'nekuta';
-import { defineStore } from 'nekuta';
+import { ref, computed } from '@nekuta/core';
+import { defineStore } from '@nekuta/core';
 
 export const useCounterStore = defineStore('counter', () => {
     const count = ref(0);

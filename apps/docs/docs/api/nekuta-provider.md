@@ -14,7 +14,7 @@ function NekutaProvider(props: {
 Makes a [`Nekuta`](./create-nekuta.md) instance available to [`useStore()`](./use-store.md)/[`connectStore()`](./connect-store.md) below it in the tree, via React Context.
 
 ```tsx
-import { createNekuta, NekutaProvider } from 'nekuta';
+import { createNekuta, NekutaProvider } from '@nekuta/core';
 
 const nekuta = createNekuta();
 

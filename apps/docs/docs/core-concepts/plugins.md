@@ -7,7 +7,7 @@ sidebar_position: 5
 A plugin extends every store created on a `Nekuta` instance — the same extension point Pinia plugins use.
 
 ```ts
-import { createNekuta } from 'nekuta';
+import { createNekuta } from '@nekuta/core';
 
 const nekuta = createNekuta();
 

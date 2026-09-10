@@ -13,7 +13,7 @@ function useStore<S extends StoreGeneric>(
 The hook for functional components. Takes a store _definition_ (what [`defineStore()`](./define-store.md) returned) and returns the live store, subscribed so the calling component re-renders when it changes.
 
 ```tsx
-import { useStore } from 'nekuta';
+import { useStore } from '@nekuta/core';
 import { useCounterStore } from './stores/counterStore';
 
 function Counter() {

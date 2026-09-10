@@ -11,7 +11,7 @@ There's no `createTestingPinia()`-equivalent in Nekuta — no dedicated testing 
 No React needed for this — create an instance, resolve the store against it, assert:
 
 ```ts
-import { createNekuta } from 'nekuta';
+import { createNekuta } from '@nekuta/core';
 import { useCounterStore } from './counterStore';
 
 describe('counterStore', () => {
@@ -33,7 +33,7 @@ Creating a fresh `Nekuta` instance per test gives full isolation for free — no
 Wrap it in a real `<NekutaProvider>`, same as your app does, and use `@testing-library/react`:
 
 ```tsx
-import { createNekuta, NekutaProvider } from 'nekuta';
+import { createNekuta, NekutaProvider } from '@nekuta/core';
 import { render, screen, act } from '@testing-library/react';
 import { Counter } from './Counter';
 

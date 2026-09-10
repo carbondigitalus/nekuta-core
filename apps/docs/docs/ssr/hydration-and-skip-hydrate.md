@@ -15,7 +15,7 @@ Both Next.js adapters rely on the same three functions from `nekuta` (not `@neku
 Marks a value to be excluded from serialization — for state that can't survive a JSON round-trip, or shouldn't: a class instance, a live socket connection, anything the client should construct fresh rather than receive from the server.
 
 ```ts
-import { skipHydrate } from 'nekuta';
+import { skipHydrate } from '@nekuta/core';
 
 state: () => ({
     count: 0,

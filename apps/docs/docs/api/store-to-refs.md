@@ -13,7 +13,7 @@ function storeToRefs<S extends Record<string, unknown>>(
 Splits a store's state and getters off into individually-subscribable refs — the same purpose as Pinia's `storeToRefs()`: destructuring a store directly (`const { count } = counter`) loses reactivity, since it copies the current value out at that instant rather than keeping a live binding. `storeToRefs()` gives you refs instead, which do stay live:
 
 ```ts
-import { storeToRefs } from 'nekuta';
+import { storeToRefs } from '@nekuta/core';
 
 const counter = useStore(useCounterStore);
 const { count, doubleCount } = storeToRefs(counter);

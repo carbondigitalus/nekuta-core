@@ -14,7 +14,7 @@ Using the same `useCounterStore` from the [Quick Start](./quick-start.md):
 
 ```tsx title="Counter.tsx"
 import { Component } from 'react';
-import { connectStore, type MappedStoreProps } from 'nekuta';
+import { connectStore, type MappedStoreProps } from '@nekuta/core';
 import { useCounterStore } from './stores/counterStore';
 
 type Props = MappedStoreProps<{ counter: typeof useCounterStore }>;

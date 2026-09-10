@@ -5,7 +5,7 @@ sidebar_position: 1
 # Installation
 
 ```bash
-npm install nekuta
+npm install @nekuta/core
 ```
 
 React 19 and React DOM 19 are peer dependencies — install them if your project doesn't already have them:

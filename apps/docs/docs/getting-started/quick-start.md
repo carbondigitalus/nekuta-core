@@ -11,7 +11,7 @@ This page builds a counter store and reads it from a functional component. For c
 Every store lives on a `Nekuta` instance — the equivalent of a Pinia instance. Create one near the root of your app and make it available via `<NekutaProvider>`:
 
 ```tsx title="App.tsx"
-import { createNekuta, NekutaProvider } from 'nekuta';
+import { createNekuta, NekutaProvider } from '@nekuta/core';
 
 const nekuta = createNekuta();
 
@@ -27,7 +27,7 @@ export function App() {
 ## 2. Define a store
 
 ```ts title="stores/counterStore.ts"
-import { defineStore } from 'nekuta';
+import { defineStore } from '@nekuta/core';
 
 export const useCounterStore = defineStore({
     id: 'counter',
@@ -48,7 +48,7 @@ export const useCounterStore = defineStore({
 ## 3. Read and write it from a component
 
 ```tsx title="Counter.tsx"
-import { useStore } from 'nekuta';
+import { useStore } from '@nekuta/core';
 import { useCounterStore } from './stores/counterStore';
 
 export function Counter() {

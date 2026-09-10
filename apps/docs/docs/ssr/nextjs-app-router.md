@@ -9,7 +9,7 @@ There's no persistent "app instance" in the App Router the way Pages Router has 
 ## Root layout
 
 ```tsx title="app/layout.tsx"
-import { serializeNekutaState } from 'nekuta';
+import { serializeNekutaState } from '@nekuta/core';
 import { getServerNekuta, NekutaClientProvider } from '@nekuta/next';
 import { useCounterStore } from '../stores/counterStore';
 
@@ -48,7 +48,7 @@ Everything below `<NekutaClientProvider>` uses `useStore()`/`connectStore()` com
 ```tsx title="app/page.tsx"
 'use client';
 
-import { useStore } from 'nekuta';
+import { useStore } from '@nekuta/core';
 import { useCounterStore } from '../stores/counterStore';
 
 export default function Page() {
