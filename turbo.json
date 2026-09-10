@@ -23,6 +23,10 @@
             "dependsOn": ["^build"],
             "outputs": [".next/**", "!.next/cache/**"]
         },
+        "@nekuta/playground#typecheck": {
+            "dependsOn": ["^build", "build"],
+            "outputs": [".next/types/**"]
+        },
         "@nekuta/content#build": {
             "dependsOn": ["^build"],
             "env": ["NODE_ENV", "PORT", "DATABASE_URI", "PAYLOAD_SECRET"],

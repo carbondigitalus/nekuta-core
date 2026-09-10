@@ -1,0 +1,8 @@
+{
+    "label": "Cookbook",
+    "position": 5,
+    "link": {
+        "type": "generated-index",
+        "description": "Testing stores, and migrating from Pinia or from Zustand/Redux."
+    }
+}

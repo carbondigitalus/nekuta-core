@@ -1,0 +1,8 @@
+{
+    "label": "SSR & Next.js",
+    "position": 4,
+    "link": {
+        "type": "generated-index",
+        "description": "Server-side rendering and hydration for Next.js — the Pages Router and the App Router."
+    }
+}
