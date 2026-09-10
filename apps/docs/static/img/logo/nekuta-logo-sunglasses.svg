@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title description">
+  <title id="title">Nekutā mango mascot wearing sunglasses</title>
+  <desc id="description">A cheerful golden mango character wearing glossy black sunglasses, with a green leaf, smile, arms, and legs.</desc>
+  <defs>
+    <linearGradient id="mango" x1="210" y1="230" x2="820" y2="890" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFE55C"/>
+      <stop offset="0.52" stop-color="#FFC53D"/>
+      <stop offset="0.78" stop-color="#FF9638"/>
+      <stop offset="1" stop-color="#F4603E"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="550" y1="115" x2="855" y2="360" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#68D85E"/>
+      <stop offset="0.5" stop-color="#28AF4F"/>
+      <stop offset="1" stop-color="#07883E"/>
+    </linearGradient>
+    <linearGradient id="stem" x1="490" y1="100" x2="555" y2="260" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A96D35"/>
+      <stop offset="1" stop-color="#75451F"/>
+    </linearGradient>
+    <linearGradient id="limb" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#EAA110"/>
+      <stop offset="1" stop-color="#D98208"/>
+    </linearGradient>
+    <linearGradient id="lens" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#252A31"/>
+      <stop offset="0.48" stop-color="#060708"/>
+      <stop offset="1" stop-color="#171A1F"/>
+    </linearGradient>
+  </defs>
+
+  <path d="M501 256C505 209 498 178 479 145C465 121 475 92 498 83C524 73 547 89 558 116C573 154 569 209 554 270Z" fill="url(#stem)"/>
+  <path d="M540 159C622 83 746 92 851 174C846 281 790 350 686 391C613 364 565 304 540 159Z" fill="url(#leaf)"/>
+  <path d="M568 175C661 186 748 231 826 322" fill="none" stroke="#81DE55" stroke-width="13" stroke-linecap="round" opacity=".75"/>
+
+  <path d="M499 215C649 195 785 293 829 441C875 596 827 786 696 883C602 952 418 961 297 886C190 819 152 686 190 565C218 474 281 421 315 336C344 265 407 228 499 215Z" fill="url(#mango)"/>
+
+  <path d="M281 659C307 691 333 715 367 737" fill="none" stroke="url(#limb)" stroke-width="25" stroke-linecap="round"/>
+  <path d="M750 651C726 686 701 712 669 735" fill="none" stroke="url(#limb)" stroke-width="25" stroke-linecap="round"/>
+  <path d="M420 908C418 932 412 953 402 976" fill="none" stroke="url(#limb)" stroke-width="25" stroke-linecap="round"/>
+  <path d="M611 914C614 939 620 959 630 980" fill="none" stroke="url(#limb)" stroke-width="25" stroke-linecap="round"/>
+
+  <ellipse cx="368" cy="583" rx="46" ry="19" fill="#F197C7" opacity=".9"/>
+  <ellipse cx="663" cy="583" rx="46" ry="19" fill="#F197C7" opacity=".9"/>
+
+  <!-- Sunglasses: frames, lenses, bridge, and highlights are all editable. -->
+  <g id="sunglasses">
+    <path d="M305 475C344 460 406 457 463 473L458 522C453 572 420 594 382 590C343 586 320 559 313 520Z" fill="url(#lens)" stroke="#030405" stroke-width="15" stroke-linejoin="round"/>
+    <path d="M567 473C624 457 686 460 725 475L717 520C711 559 687 586 649 590C610 594 577 572 573 522Z" fill="url(#lens)" stroke="#030405" stroke-width="15" stroke-linejoin="round"/>
+    <path d="M459 486C475 474 492 469 515 469C538 469 555 474 571 486" fill="none" stroke="#030405" stroke-width="17" stroke-linecap="round"/>
+    <path d="M309 480L282 470" fill="none" stroke="#030405" stroke-width="16" stroke-linecap="round"/>
+    <path d="M721 480L748 470" fill="none" stroke="#030405" stroke-width="16" stroke-linecap="round"/>
+    <path d="M340 487C363 479 388 477 410 480" fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round" opacity=".78"/>
+    <path d="M601 487C624 479 649 477 671 480" fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round" opacity=".78"/>
+  </g>
+
+  <path d="M468 610C481 629 497 637 516 637C535 637 552 629 565 610" fill="none" stroke="#050505" stroke-width="14" stroke-linecap="round"/>
+</svg>

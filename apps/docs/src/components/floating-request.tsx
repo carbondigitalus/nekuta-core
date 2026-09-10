@@ -11,7 +11,7 @@ export default class FloatingRequestButton extends React.Component {
                 <ul>
                     <li>
                         <a
-                            href="https://github.com/jared-leddy/nekuta/issues"
+                            href="https://github.com/jared-leddy/nekuta-core/issues"
                             target="_blank"
                             rel="noreferrer"
                         >

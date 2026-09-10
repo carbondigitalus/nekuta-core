@@ -5,6 +5,12 @@
     "license": "MIT",
     "description": "Next.js adapter for Nekuta — SSR/hydration support for the Pages Router and App Router.",
     "type": "module",
+    "scripts": {
+        "build": "tsc -b -v tsconfig.build.json",
+        "test:unit": "jest --coverage --passWithNoTests --config jest.config.ts",
+        "test:watch": "jest --coverage --watch --passWithNoTests --config jest.config.ts",
+        "typecheck": "tsc --noEmit"
+    },
     "sideEffects": false,
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
@@ -18,12 +24,6 @@
     "files": [
         "dist"
     ],
-    "scripts": {
-        "build": "tsc -b -v tsconfig.build.json",
-        "test:unit": "jest --coverage --passWithNoTests --config jest.config.ts",
-        "test:watch": "jest --coverage --watch --passWithNoTests --config jest.config.ts",
-        "typecheck": "tsc --noEmit"
-    },
     "peerDependencies": {
         "@nekuta/core": "*",
         "next": "^15.0.0 || ^16.0.0",

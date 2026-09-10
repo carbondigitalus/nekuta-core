@@ -1,36 +1,64 @@
 #floating-request-button {
-  bottom: 100px;
-  position: fixed;
-  right: 60px;
-  //   width: 150px;
-  &:hover {
-    ul {
-      display: block;
+    position: fixed;
+    right: 32px;
+    bottom: 32px;
+    z-index: 200;
+
+    &:hover ul,
+    &:focus-within ul {
+        display: block;
     }
-  }
-  ul {
-    background-color: #ece2c6;
-    border: solid 2px #36421b;
-    border-radius: 20px;
-    display: none;
-    list-style-type: none;
-    margin-bottom: 5px;
-    padding: 10px;
-    text-align: right;
-  }
-  a {
-    color: #36421b;
-  }
-  button {
-    background-color: #ece2c6;
-    border: solid 2px #36421b;
-    border-radius: 10px;
-    color: #36421b;
-    font-size: 40px;
-    padding: 0 10px 5px 10px;
-    position: relative;
-    left: 80%;
-    line-height: 1;
-    // right: 20px;
-  }
+
+    ul {
+        display: none;
+        margin: 0 0 10px;
+        padding: 10px;
+        list-style-type: none;
+        text-align: right;
+        background: var(--nekuta-navy-800, #111a2e);
+        border: 1px solid var(--nekuta-navy-border, #223050);
+        border-radius: 14px;
+        box-shadow: 0 12px 28px -12px rgba(0, 0, 0, 0.45);
+    }
+
+    a {
+        display: block;
+        padding: 6px 10px;
+        color: #e8ecf5;
+        font-size: 0.85rem;
+        font-weight: 600;
+        white-space: nowrap;
+        text-decoration: none;
+
+        &:hover {
+            color: var(--ifm-color-primary);
+        }
+    }
+
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 52px;
+        height: 52px;
+        margin-left: auto;
+        padding: 0;
+        font-size: 28px;
+        line-height: 1;
+        color: #241102;
+        background: linear-gradient(
+            135deg,
+            var(--nekuta-mango-mid, #ffc53d),
+            var(--nekuta-mango-end, #f4603e)
+        );
+        border: none;
+        border-radius: 50%;
+        box-shadow: 0 10px 24px -8px rgba(244, 96, 62, 0.55);
+        cursor: pointer;
+        transition: transform 150ms ease;
+
+        &:hover {
+            transform: translateY(-2px) scale(1.04);
+        }
+    }
 }

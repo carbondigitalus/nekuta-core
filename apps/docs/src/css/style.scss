@@ -1,54 +1,178 @@
 /**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
+ * Nekuta brand theme — structurally inspired by Pinia's docs site (dark-first,
+ * hero + feature-grid homepage), with Pinia's near-black swapped for a deep
+ * navy blue, and Nekuta's own mango-mascot palette as the accent instead of
+ * Pinia's green. The mango/leaf gradient stops below are the exact same
+ * values used in NekutaLogoAnimated.tsx, so the accent color and the mascot
+ * are always drawn from one source of truth.
  */
 
-/* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+    /* Richer/more saturated than the first pass — the old scale was dark
+       enough to read as near-black rather than clearly blue. */
+    --nekuta-navy-950: #05081a;
+    --nekuta-navy-900: #0a1030;
+    --nekuta-navy-800: #111a42;
+    --nekuta-navy-700: #16224f;
+    --nekuta-navy-600: #1f2c63;
+    --nekuta-navy-border: #263a72;
+
+    /* A blue-tinted stand-in for Infima's own emphasis-0..1000 ramp, which
+       defaults to plain neutral gray in dark mode (--ifm-color-gray-*) and
+       isn't affected by the navy tokens above at all — used below to
+       override that ramp, and directly by our own secondary-text rules. */
+    --nekuta-navy-emphasis-400: #2a3d76;
+    --nekuta-navy-emphasis-500: #3c4d80;
+    --nekuta-navy-emphasis-600: #5f719c;
+    --nekuta-navy-emphasis-700: #93a2c2;
+    --nekuta-navy-emphasis-800: #c2cbe0;
+    --nekuta-navy-emphasis-900: #e8ecf7;
+
+    --nekuta-cream-50: #fffdf9;
+    --nekuta-cream-100: #fdf8f0;
+    --nekuta-cream-200: #f5ecdc;
+
+    --nekuta-mango-start: #ffe55c;
+    --nekuta-mango-mid: #ffc53d;
+    --nekuta-mango-end: #f4603e;
+    --nekuta-leaf-start: #68d85e;
+    --nekuta-leaf-end: #07883e;
+
+    --ifm-font-family-base:
+        'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --ifm-font-family-monospace:
+        'JetBrains Mono', 'SFMono-Regular', Menlo, Consolas, monospace;
+    --ifm-heading-font-weight: 800;
+    --ifm-code-font-size: 90%;
+    --ifm-code-border-radius: 6px;
+
+    /* Infima widens .container to 1320px past 1400px viewports by default —
+       capping it at the base width keeps content in a tighter, more "boxed"
+       column on wide screens, matching Pinia's own tighter layout instead of
+       stretching edge to edge. */
+    --ifm-container-width-xl: 1140px;
+
+    --ifm-color-primary: #e8721e;
+    --ifm-color-primary-dark: #d1660f;
+    --ifm-color-primary-darker: #c6600e;
+    --ifm-color-primary-darkest: #a34f0b;
+    --ifm-color-primary-light: #ef7e2d;
+    --ifm-color-primary-lighter: #f18946;
+    --ifm-color-primary-lightest: #f5a06e;
+
+    --ifm-background-color: var(--nekuta-cream-50);
+    --ifm-navbar-background-color: var(--nekuta-cream-50);
+    --ifm-footer-background-color: var(--nekuta-navy-900);
+    --ifm-footer-color: #c3cbe0;
+    --ifm-footer-link-color: #e8ecf5;
+    --ifm-footer-title-color: #ffffff;
+
+    --docusaurus-highlighted-code-line-bg: rgba(232, 114, 30, 0.1);
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
-[data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
-}
-
-.greenDarkBg {
-  background-color: #556b2f;
-}
-.greenDarkestBg {
-  background-color: #36421b;
-}
-.sandLightBg {
-  background-color: #ece2c6;
-}
-html[data-theme='light'] {
-  .navbar,
-  .main-wrapper,
-  .hero {
-    background-color: #ece2c6;
-  }
-}
+/* `html[data-theme='dark']`, not the weaker `[data-theme='dark']` — Infima's
+   own dark-mode block uses that exact selector to hardcode #1b1b1d/#242526
+   for background/surface plus its own gray emphasis ramp, and that selector
+   (0,1,1) beats a bare attribute selector (0,1,0) regardless of source
+   order. Every override below was silently losing to it. */
 html[data-theme='dark'] {
-  .navbar,
-  .main-wrapper,
-  .hero {
-    background-color: #36421b;
-  }
+    --ifm-color-primary: #ffb454;
+    --ifm-color-primary-dark: #ffa733;
+    --ifm-color-primary-darker: #ff9e1f;
+    --ifm-color-primary-darkest: #e8850a;
+    --ifm-color-primary-light: #ffc073;
+    --ifm-color-primary-lighter: #ffcb8a;
+    --ifm-color-primary-lightest: #ffe0b8;
+
+    --ifm-background-color: var(--nekuta-navy-900);
+    --ifm-background-surface-color: var(--nekuta-navy-800);
+    --ifm-navbar-background-color: var(--nekuta-navy-900);
+    --ifm-toc-border-color: var(--nekuta-navy-border);
+    --ifm-table-border-color: var(--nekuta-navy-border);
+    --ifm-hr-border-color: var(--nekuta-navy-border);
+
+    /* Infima's own emphasis-0..1000 ramp defaults to plain neutral gray in
+       dark mode (--ifm-color-gray-*), independent of every navy token above
+       — it backs a lot of UI (secondary text, borders, disabled/hover
+       states, and our own .subtagline/.featureDescription/etc. below), so
+       leaving it alone is exactly what was still reading as "dark gray"
+       everywhere the navy background/surface overrides don't reach. */
+    --ifm-color-emphasis-0: var(--nekuta-navy-950);
+    --ifm-color-emphasis-100: var(--nekuta-navy-900);
+    --ifm-color-emphasis-200: var(--nekuta-navy-800);
+    --ifm-color-emphasis-300: var(--nekuta-navy-border);
+    --ifm-color-emphasis-400: var(--nekuta-navy-emphasis-400);
+    --ifm-color-emphasis-500: var(--nekuta-navy-emphasis-500);
+    --ifm-color-emphasis-600: var(--nekuta-navy-emphasis-600);
+    --ifm-color-emphasis-700: var(--nekuta-navy-emphasis-700);
+    --ifm-color-emphasis-800: var(--nekuta-navy-emphasis-800);
+    --ifm-color-emphasis-900: var(--nekuta-navy-emphasis-900);
+    --ifm-color-emphasis-1000: #ffffff;
+
+    --docusaurus-highlighted-code-line-bg: rgba(255, 180, 84, 0.14);
+}
+
+html,
+body {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+#__docusaurus {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+html[data-theme='dark'] {
+    .navbar {
+        border-bottom: 1px solid var(--nekuta-navy-border);
+        box-shadow: none;
+    }
+
+    .menu__link--active,
+    .table-of-contents__link--active {
+        font-weight: 600;
+    }
+}
+
+html[data-theme='light'] {
+    .navbar {
+        border-bottom: 1px solid var(--nekuta-cream-200);
+        box-shadow: none;
+    }
+}
+
+/* Infima's `.footer--dark` hardcodes its own --ifm-footer-background-color
+   (#303846) directly on the class, which otherwise wins over the :root
+   override above at equal specificity — match Infima's own pattern by
+   scoping the override to the same selector. */
+.footer--dark {
+    --ifm-footer-background-color: var(--nekuta-navy-900);
+    --ifm-footer-link-color: #c3cbe0;
+}
+
+/* Buttons get a mango gradient instead of a flat fill. */
+.button--primary {
+    background: linear-gradient(
+        135deg,
+        var(--nekuta-mango-mid),
+        var(--nekuta-mango-end)
+    );
+    border: none;
+    color: #241102;
+    font-weight: 700;
+    transition:
+        transform 150ms ease,
+        box-shadow 150ms ease;
+
+    &:hover {
+        color: #241102;
+        transform: translateY(-1px);
+        box-shadow: 0 10px 24px -8px rgba(244, 96, 62, 0.55);
+    }
+}
+
+.button--secondary {
+    border-width: 2px;
+    font-weight: 700;
 }

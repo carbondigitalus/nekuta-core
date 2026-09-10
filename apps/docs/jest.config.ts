@@ -11,6 +11,8 @@ const config: Config.InitialOptions = {
     moduleNameMapper: {
         '\\.(scss|sass|css)$': 'identity-obj-proxy',
         '^@theme/Layout$': '<rootDir>/tests/__mocks__/theme-layout.tsx',
+        '^@theme/CodeBlock$': '<rootDir>/tests/__mocks__/theme-codeblock.tsx',
+        '^@docusaurus/Link$': '<rootDir>/tests/__mocks__/docusaurus-link.tsx',
         '^@docusaurus/useDocusaurusContext$':
             '<rootDir>/tests/__mocks__/useDocusaurusContext.ts'
     },

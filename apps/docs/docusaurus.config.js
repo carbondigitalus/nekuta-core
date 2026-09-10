@@ -3,13 +3,16 @@
 
 const { themes } = require('prism-react-renderer');
 const lightCodeTheme = themes.github;
-const darkCodeTheme = themes.dracula;
+// nightOwl's own background (#011627) is a genuine navy, unlike dracula's
+// grayish-purple (#282a36) — keeps code blocks consistent with the rest of
+// the dark theme instead of reading as a different, grayer surface.
+const darkCodeTheme = themes.nightOwl;
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
     title: 'Nekuta',
-    tagline: 'The official docs for our Nekuta store for React.',
-    favicon: 'img/logo/icon-dark-bg.png',
+    tagline: 'Intuitive state management for React.',
+    favicon: 'img/logo/nekuta-logo.png',
 
     // Set the production url of your site here
     url: 'https://docs.nekuta.org',
@@ -19,13 +22,38 @@ const config = {
 
     // GitHub pages deployment config.
     // If you aren't using GitHub pages, you don't need these.
-    organizationName: 'carbondigitalus', // Usually your GitHub org/user name.
-    projectName: 'nekuta', // Usually your repo name.
+    organizationName: 'jared-leddy', // Usually your GitHub org/user name.
+    projectName: 'nekuta-core', // Usually your repo name.
 
     onBrokenLinks: 'throw',
     markdown: {
         hooks: { onBrokenMarkdownLinks: 'warn' }
     },
+
+    headTags: [
+        {
+            tagName: 'link',
+            attributes: {
+                rel: 'preconnect',
+                href: 'https://fonts.googleapis.com'
+            }
+        },
+        {
+            tagName: 'link',
+            attributes: {
+                rel: 'preconnect',
+                href: 'https://fonts.gstatic.com',
+                crossorigin: 'anonymous'
+            }
+        },
+        {
+            tagName: 'link',
+            attributes: {
+                rel: 'stylesheet',
+                href: 'https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap'
+            }
+        }
+    ],
 
     // Even if you don't use internalization, you can use this field to set useful
     // metadata like html lang. For example, if your site is Chinese, you may want
@@ -48,7 +76,7 @@ const config = {
                     // Please change this to your repo.
                     // Remove this to remove the "edit this page" links.
                     editUrl:
-                        'https://github.com/jared-leddy/nekuta/edit/main/apps/docs/'
+                        'https://github.com/jared-leddy/nekuta-core/edit/main/apps/docs/'
                 },
                 theme: {
                     customCss: require.resolve('./src/css/style.scss')
@@ -70,7 +98,8 @@ const config = {
                 { name: 'og:site_name', content: 'Nekuta' },
                 {
                     name: 'og:description',
-                    content: 'The official docs for our Nekuta store for React.'
+                    content:
+                        'Intuitive state management for React. Type-safe. Predictable. Class-first.'
                 },
                 { name: 'og:email', content: 'hello@nekuta.org' },
                 { name: 'og:locality', content: 'Charlotte' },
@@ -80,13 +109,16 @@ const config = {
                 { name: 'twitter:site', content: '@NekutaStore' },
                 { name: 'twitter:creator', content: '@NekutaStore' }
             ],
-            // Replace with your project's social card
-            image: 'img/docusaurus-social-card.jpg',
+            image: 'img/nekuta-social.png',
+            colorMode: {
+                defaultMode: 'dark',
+                respectPrefersColorScheme: false
+            },
             navbar: {
-                title: 'Nekuta',
+                title: 'Nekutā',
                 logo: {
                     alt: 'Nekuta Logo',
-                    src: 'img/logo/icon-light-bg.png'
+                    src: 'img/logo/nekuta-logo.svg'
                 },
                 items: [
                     {
@@ -96,7 +128,7 @@ const config = {
                         label: 'Docs'
                     },
                     {
-                        href: 'https://github.com/jared-leddy/nekuta',
+                        href: 'https://github.com/jared-leddy/nekuta-core',
                         label: 'GitHub',
                         position: 'right'
                     }
@@ -119,7 +151,7 @@ const config = {
                         items: [
                             {
                                 label: 'GitHub',
-                                href: 'https://github.com/jared-leddy/nekuta'
+                                href: 'https://github.com/jared-leddy/nekuta-core'
                             }
                         ]
                     }

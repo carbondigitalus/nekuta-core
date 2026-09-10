@@ -1,0 +1,101 @@
+.nekuta-logo {
+  display: block;
+  max-width: 100%;
+  overflow: visible;
+  transform-origin: center;
+}
+
+.nekuta-logo__float {
+  animation: nekuta-float 4.8s ease-in-out infinite;
+  transform-origin: 50% 58%;
+}
+
+.nekuta-logo__body,
+.nekuta-logo__leaf {
+  transition: transform 90ms linear;
+}
+
+.nekuta-logo__leaf {
+  animation: nekuta-leaf-breathe 3.6s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: 22% 78%;
+}
+
+.nekuta-logo__arm {
+  transform-box: fill-box;
+  transition: transform 180ms ease-out;
+}
+
+.nekuta-logo__arm--left {
+  transform-origin: 100% 100%;
+}
+
+.nekuta-logo__arm--right {
+  transform-origin: 0 100%;
+}
+
+.nekuta-logo--hovered .nekuta-logo__arm--left {
+  animation: nekuta-wave-left 520ms ease-in-out infinite alternate;
+}
+
+.nekuta-logo--hovered .nekuta-logo__arm--right {
+  animation: nekuta-wave-right 520ms ease-in-out infinite alternate;
+}
+
+.nekuta-logo__open-mouth {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 120ms ease, transform 120ms ease;
+  transform: scaleY(0.25);
+}
+
+.nekuta-logo__smile {
+  opacity: 1;
+  transition: opacity 100ms ease;
+}
+
+.nekuta-logo--hovered .nekuta-logo__open-mouth {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.nekuta-logo--hovered .nekuta-logo__smile {
+  opacity: 0;
+}
+
+@keyframes nekuta-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes nekuta-leaf-breathe {
+  0%, 100% { rotate: -1deg; }
+  50% { rotate: 2deg; }
+}
+
+@keyframes nekuta-wave-left {
+  from { rotate: 0deg; }
+  to { rotate: 9deg; }
+}
+
+@keyframes nekuta-wave-right {
+  from { rotate: 0deg; }
+  to { rotate: -9deg; }
+}
+
+.nekuta-logo--reduced-motion *,
+.nekuta-logo--reduced-motion *::before,
+.nekuta-logo--reduced-motion *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nekuta-logo *,
+  .nekuta-logo *::before,
+  .nekuta-logo *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -6,7 +6,7 @@
     "description": "Live demo dogfooding nekuta + @nekuta/next across the Pages Router and the App Router.",
     "type": "module",
     "scripts": {
-        "start:dev": "next dev",
+        "start:dev": "next dev --port 3000",
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
