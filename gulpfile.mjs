@@ -62,7 +62,11 @@ export function lintStaged(done) {
 
 const RELEASABLE_PACKAGES = {
     core: { dir: 'apps/nekuta', name: '@nekuta/core' },
-    next: { dir: 'apps/next', name: '@nekuta/next' }
+    next: { dir: 'apps/next', name: '@nekuta/next' },
+    'eslint-plugin': {
+        dir: 'apps/eslint-plugin',
+        name: '@nekuta/eslint-plugin'
+    }
 };
 
 function getReleaseArgs() {

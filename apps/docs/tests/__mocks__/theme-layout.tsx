@@ -8,7 +8,11 @@ type LayoutProps = {
 
 export default function Layout({ children, title, description }: LayoutProps) {
     return (
-        <div data-testid="layout" data-title={title} data-description={description}>
+        <div
+            data-testid="layout"
+            data-title={title}
+            data-description={description}
+        >
             {children}
         </div>
     );

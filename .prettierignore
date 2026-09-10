@@ -1,0 +1,14 @@
+# Vendored reference source — not ours to reformat
+pinia
+
+# Compiled/generated output
+dist
+build
+.next
+.docusaurus
+coverage
+node_modules
+*.tsbuildinfo
+
+# Lockfile
+package-lock.json

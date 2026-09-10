@@ -27,3 +27,11 @@ npm install @nekuta/next
 ## Not using Next.js?
 
 You don't need `@nekuta/next` at all. `@nekuta/core` on its own works in any React app — Create React App, Vite, a plain client-rendered SPA. Wrap your app in a [`<NekutaStore>`](../api/nekuta-store.md) and start defining stores.
+
+## Optional: enforcing one store style
+
+`@nekuta/eslint-plugin` lints for a single `defineStore()` style across your project — see [Enforcing a Store Style](../cookbook/enforcing-a-store-style.md).
+
+```bash
+npm install --save-dev @nekuta/eslint-plugin
+```

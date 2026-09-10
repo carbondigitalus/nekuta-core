@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 7
 ---
 
 # Plugins
@@ -25,7 +25,7 @@ Whatever object a plugin returns is merged onto the store — `store.createdAt` 
 
 - **`store`** — the store that was just created (already fully set up — state, getters, actions, `$patch`/`$subscribe`/etc. are all present).
 - **`nekuta`** — the `Nekuta` instance the store belongs to. Useful for a plugin that needs to read/write other stores, or stash instance-level state.
-- **`options`** — whatever was passed to `defineStore()` for this store (the full options object for an options store; `{ id }` only for a setup store, since there's no separate options object to inspect there).
+- **`options`** — whatever was passed to `defineStore()` for this store (the full options object for a schema store; `{ id }` only for a hooks store, since there's no separate options object to inspect there).
 
 ## Registering multiple plugins
 

@@ -1,10 +1,10 @@
 ---
-sidebar_position: 2
+sidebar_position: 4
 ---
 
 # State
 
-State is whatever `state()` returns (options stores) or whatever `ref()`/`reactive()` values a setup function returns (setup stores). It's exposed directly on the store — no `.value`, no selector functions:
+State is whatever `state()` returns (schema stores) or whatever `ref()`/`reactive()` values a hooks function returns (hooks stores). It's exposed directly on the store — no `.value`, no selector functions:
 
 ```ts
 const counter = useCounterStore();
@@ -12,7 +12,7 @@ counter.count; // read
 counter.count = 5; // write — triggers subscribers, re-renders, etc.
 ```
 
-This works even for state that started life as a `ref()` in a setup store: Nekuta automatically unwraps refs stored as properties on a reactive object (the same behavior Vue's `reactive()` has), so `counter.count` is always the plain value, never a `Ref` wrapper, regardless of which style defined the store.
+This works even for state that started life as a `ref()` in a hooks store: Nekuta automatically unwraps refs stored as properties on a reactive object (the same behavior Vue's `reactive()` has), so `counter.count` is always the plain value, never a `Ref` wrapper, regardless of which style defined the store.
 
 ## Objects and arrays are deeply reactive
 
@@ -30,13 +30,13 @@ store.user.tags.add('editor'); // reactive
 
 ## Resetting state — `$reset()`
 
-Options stores get `$reset()` for free — it re-runs `state()` and applies the result as a patch:
+Schema stores get `$reset()` for free — it re-runs `state()` and applies the result as a patch:
 
 ```ts
 counter.$reset(); // count is back to whatever state() returns
 ```
 
-Setup stores don't implement `$reset()` (there's no single `state()` factory to re-run) — calling it throws. If you need reset behavior for a setup store, write your own action that puts each ref back to its initial value.
+Hooks stores don't implement `$reset()` (there's no single `state()` factory to re-run) — calling it throws. If you need reset behavior for a hooks store, write your own action that puts each ref back to its initial value — see [Hooks Stores](./hooks-stores.md#resetting-a-hooks-store).
 
 ## Replacing the whole state tree — `$state`
 

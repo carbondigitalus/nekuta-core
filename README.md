@@ -33,6 +33,7 @@ nekuta-core/
   apps/
     nekuta/          → published as "@nekuta/core" on npm (core engine)
     next/            → published as "@nekuta/next" (Next.js adapter — Pages Router + App Router)
+    eslint-plugin/   → published as "@nekuta/eslint-plugin" (lint rules for Nekuta consumers)
     playground/      → @nekuta/playground (private, live-deployed Next.js demo)
     docs/            → existing Docusaurus app, content to be built out
   packages/
@@ -43,6 +44,7 @@ nekuta-core/
 - **One adapter package for now**: `apps/next` (`@nekuta/next`), mirroring Pinia's scoped-adapter pattern (core unscoped, adapter scoped). It supports both Pages Router and App Router from a single set of named exports out of one package root, kept internally organized by directory (`src/pages/`, `src/app/`) so the two are never actually tangled together in code — but not exposed as separate `package.json` `exports` subpaths unless/until that's actually needed (e.g. to keep server-only code out of a client bundle). Simplest thing that works; add the subpath split later only if a real problem shows up. Depends on `@nekuta/core` and consumes the `ssr/serialize.ts`/`skipHydrate.ts` helpers that live in core. The eventual split into `@nekuta/next-pages`/`@nekuta/next-app` as two real packages is still the plan — likely within the first year, once the two routers' needs actually diverge enough to justify it.
 - `apps/playground` and `apps/docs` are deployable Next.js/Docusaurus apps in the ordinary sense — same placement logic as before, just now siblings of the product packages rather than the only things in `apps/`.
 - New `turbo.json` task overrides needed: `@nekuta/playground#build` (`.next/**` outputs, same shape as the existing per-app override pattern). `@nekuta/core` and `@nekuta/next` are plain TS libraries (not Next runtime apps themselves) — they're covered by the existing generic `build` task (`dist/**` output, `dependsOn: ["^build"]`) with no override needed, same as any `packages/*` library would be; their location under `apps/` is an organizational choice, not a turbo task-graph one.
+- `apps/eslint-plugin` (`@nekuta/eslint-plugin`, added post-Milestone-10): a real publishable package, same "apps are the product" reasoning as `@nekuta/core`/`@nekuta/next` — any Nekuta consumer can install it, not just this monorepo's own apps. Plain TS library covered by the generic `build` task, no override needed. Peer-depends on `eslint@^9`. Ships one rule, `define-store-format`, that optionally enforces a single `defineStore()` call style (`'schema'` or `'hooks'`) project-wide — deliberately a lint rule, not a `<NekutaStore>` prop, since `defineStore()` calls run at module-evaluation time, before any `<NekutaStore>` ever renders; a runtime prop can't retroactively enforce a decision already made at import time. Documented in `apps/docs/docs/cookbook/enforcing-a-store-style.md`.
 
 ### Core package (`apps/nekuta`, published as `@nekuta/core`) — module breakdown
 
@@ -173,6 +175,19 @@ Recommended IA, adapted from Pinia's own docs structure for React/Next:
 - Next adapter: integration tests in `apps/next` exercising each router's hydration round-trip (server-serialize → client-rehydrate matches pre-serialization state).
 - End-to-end: the playground app, run locally (`npm run start:dev`) and clicked through in a browser for both `/pages-demo` and `/app-demo` routes, class- and functional-component demos, before considering step 6/7 done.
 - Run `turbo lint && turbo typecheck && turbo test:unit && turbo build` locally and confirm all green before merging — there's no CI pipeline enforcing this automatically right now.
+
+### Pre-Publish Checklist
+
+Before running `gulp release:publish --pkg <alias> --live` for the first real public release of any package (`@nekuta/core`, `@nekuta/next`, `@nekuta/eslint-plugin`), confirm all of the following:
+
+- **`npm run lint` (`turbo lint`)** — ⚠️ **not actually wired up yet**: no app/package currently declares a real `lint` script or has its own `eslint.config.mjs`; the root `eslint.config.mjs` ignores `apps/**`/`packages/**` entirely, so `turbo lint` currently reports success vacuously (nothing to run), not a real pass. This has to be fixed for real before this item counts as satisfied — don't treat a green `turbo lint` as evidence of anything until then.
+- **`npm run format:check`** (root `prettier --check`, added alongside the existing mutating `format` script specifically as a non-destructive verification gate) — passes as of now; requires `.prettierignore` (added — excludes the vendored `pinia/` reference source and build output, which the ungated glob was previously silently willing to rewrite).
+- **`npm run typecheck` (`turbo typecheck`)** — passes.
+- **`npm run test:unit` (`turbo test:unit`)** — passes.
+- **`npm run build` (`turbo build`)** — passes.
+- `apps/nekuta`'s `npm run size` — gzip size budget check passes.
+- `gulp release:version --pkg <alias> --type <bump>` then `gulp release:changelog --pkg <alias>` — version bump and generated `CHANGELOG.md` entry both look right for the package being released.
+- `gulp release:publish --pkg <alias>` (dry-run, the default) — validated before ever adding `--live`.
 
 ### Critical files (existing, for reference/porting)
 

@@ -10,14 +10,14 @@ If you already know Pinia, most of this is a rename exercise. The table below is
 | ------------------------------------------------ | ------------------------------------------------------------------- |
 | `createPinia()`                                  | `createNekuta()`                                                    |
 | `app.use(pinia)`                                 | `<NekutaStore>`                                                     |
-| `defineStore(...)`                               | `defineStore(...)` — same two styles (options/setup)                |
+| `defineStore(...)`                               | `defineStore(...)` — same two styles, called `schema`/`hooks` here  |
 | `const store = useCounterStore()` (in `setup()`) | `const store = useStore(useCounterStore)` (in a function component) |
 | Options API: `mapStores`/`mapState`/`mapActions` | `connectStore({ counter: useCounterStore }, Component)`             |
 | `storeToRefs(store)`                             | `storeToRefs(store)` — same purpose, same caveats                   |
 | `store.$patch(...)`                              | `store.$patch(...)` — identical                                     |
 | `store.$subscribe(...)`                          | `store.$subscribe(...)` — identical                                 |
 | `store.$onAction(...)`                           | `store.$onAction(...)` — identical                                  |
-| `store.$reset()`                                 | `store.$reset()` — options stores only, same as Pinia               |
+| `store.$reset()`                                 | `store.$reset()` — schema stores only, same as Pinia                |
 | `pinia.use(plugin)`                              | `nekuta.use(plugin)` — same shape, no `app` field                   |
 | `@pinia/nuxt`                                    | `@nekuta/next`                                                      |
 | `skipHydrate()`                                  | `skipHydrate()` — same purpose                                      |

@@ -7,6 +7,7 @@
         "build": "turbo build",
         "build:docs": "npx turbo run build --filter=@nekuta/docs",
         "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+        "format:check": "prettier --check \"**/*.{ts,tsx,md}\"",
         "lint": "turbo lint",
         "postinstall": "simple-git-hooks",
         "start:dev": "turbo start:dev",

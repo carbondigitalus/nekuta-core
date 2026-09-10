@@ -11,7 +11,9 @@ describe('Home', () => {
             screen.getByRole('heading', { name: 'Nekuta' })
         ).toBeInTheDocument();
         expect(
-            screen.getByText('The official docs for our Nekuta stores for React.')
+            screen.getByText(
+                'The official docs for our Nekuta stores for React.'
+            )
         ).toBeInTheDocument();
     });
 
