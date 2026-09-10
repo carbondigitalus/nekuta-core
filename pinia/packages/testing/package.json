@@ -1,0 +1,56 @@
+{
+  "name": "@pinia/testing",
+  "version": "2.0.1",
+  "description": "Testing module for Pinia",
+  "keywords": [
+    "mock",
+    "pinia",
+    "store",
+    "testing",
+    "tests",
+    "vue",
+    "vuex"
+  ],
+  "homepage": "https://pinia.vuejs.org/cookbook/testing.html",
+  "bugs": {
+    "url": "https://github.com/vuejs/pinia/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Eduardo San Martin Morote",
+    "email": "posva13@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vuejs/pinia.git"
+  },
+  "funding": "https://github.com/sponsors/posva",
+  "files": [
+    "dist/*.d.mts",
+    "dist/*.mjs"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s --commit-path . -l @pinia/testing -r 1"
+  },
+  "dependencies": {
+    "nostics": "^1.2.0"
+  },
+  "devDependencies": {
+    "pinia": "workspace:*",
+    "tsdown": "^0.22.14"
+  },
+  "peerDependencies": {
+    "pinia": ">=4.0.2"
+  }
+}

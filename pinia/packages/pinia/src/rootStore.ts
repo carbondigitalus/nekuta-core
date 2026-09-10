@@ -1,0 +1,172 @@
+import {
+  App,
+  EffectScope,
+  inject,
+  hasInjectionContext,
+  InjectionKey,
+  Ref,
+} from 'vue'
+import {
+  StateTree,
+  PiniaCustomProperties,
+  _Method,
+  Store,
+  _GettersTree,
+  _ActionsTree,
+  PiniaCustomStateProperties,
+  DefineStoreOptionsInPlugin,
+  StoreGeneric,
+} from './types'
+import { IS_CLIENT } from './env'
+import { diagnostics } from './diagnostics'
+
+/**
+ * setActivePinia must be called to handle SSR at the top of functions like
+ * `fetch`, `setup`, `serverPrefetch` and others
+ */
+export let activePinia: Pinia | undefined
+
+/**
+ * Sets or unsets the active pinia. Used in SSR and internally when calling
+ * actions and getters
+ *
+ * @param pinia - Pinia instance
+ */
+// @ts-expect-error: cannot constrain the type of the return
+export const setActivePinia: _SetActivePinia = (pinia) => (activePinia = pinia)
+
+interface _SetActivePinia {
+  (pinia: Pinia): Pinia
+  (pinia: undefined): undefined
+  (pinia: Pinia | undefined): Pinia | undefined
+}
+
+/**
+ * Get the currently active pinia if there is any.
+ */
+export const getActivePinia = __DEV__
+  ? (): Pinia | undefined => {
+      const pinia = hasInjectionContext() && inject(piniaSymbol)
+
+      if (!pinia && !IS_CLIENT) {
+        diagnostics.PINIA_R1004({}, { method: 'error' })
+      }
+
+      return pinia || activePinia
+    }
+  : (): Pinia | undefined =>
+      (hasInjectionContext() && inject(piniaSymbol)) || activePinia
+
+/**
+ * Every application must own its own pinia to be able to create stores
+ */
+export interface Pinia {
+  install: (app: App) => void
+
+  /**
+   * root state
+   */
+  state: Ref<Record<string, StateTree>>
+
+  /**
+   * Adds a store plugin to extend every store
+   *
+   * @param plugin - store plugin to add
+   */
+  use(plugin: PiniaPlugin): Pinia
+
+  /**
+   * Installed store plugins
+   *
+   * @internal
+   */
+  _p: PiniaPlugin[]
+
+  /**
+   * App linked to this Pinia instance
+   *
+   * @internal
+   */
+  _a: App
+
+  /**
+   * Effect scope the pinia is attached to
+   *
+   * @internal
+   */
+  _e: EffectScope
+
+  /**
+   * Registry of stores used by this pinia.
+   *
+   * @internal
+   */
+  _s: Map<string, StoreGeneric>
+
+  /**
+   * Added by `createTestingPinia()` to bypass `useStore(pinia)`.
+   *
+   * @internal
+   */
+  _testing?: boolean
+}
+
+/**
+ * Symbol used to provide/inject the pinia instance in the app. Used internally
+ * and exposed for testing purposes and edge cases like storybook. Could break
+ * in a minor, **USE AT YOUR OWN RISK**.
+ *
+ * For context, see:
+ * - https://github.com/vuejs/pinia/issues/870
+ * - https://github.com/vuejs/pinia/pull/2973
+ *
+ * @internal
+ */
+export const piniaSymbol = (
+  __DEV__ ? Symbol('pinia') : /* istanbul ignore next */ Symbol()
+) as InjectionKey<Pinia>
+
+/**
+ * Context argument passed to Pinia plugins.
+ */
+export interface PiniaPluginContext<
+  Id extends string = string,
+  S extends StateTree = StateTree,
+  G /* extends _GettersTree<S> */ = _GettersTree<S>,
+  A /* extends _ActionsTree */ = _ActionsTree,
+> {
+  /**
+   * pinia instance.
+   */
+  pinia: Pinia
+
+  /**
+   * Current app created with `Vue.createApp()`.
+   */
+  app: App
+
+  /**
+   * Current store being extended.
+   */
+  store: Store<Id, S, G, A>
+
+  /**
+   * Initial options defining the store when calling `defineStore()`.
+   */
+  options: DefineStoreOptionsInPlugin<Id, S, G, A>
+}
+
+/**
+ * Plugin to extend every store.
+ */
+export interface PiniaPlugin {
+  /**
+   * Plugin to extend every store. Returns an object to extend the store or
+   * nothing.
+   *
+   * @param context - Context
+   */
+  (
+    context: PiniaPluginContext
+  ): Partial<PiniaCustomProperties & PiniaCustomStateProperties> | void
+}

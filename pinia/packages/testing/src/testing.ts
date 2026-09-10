@@ -1,0 +1,283 @@
+import { computed, createApp, isReactive, isRef, toRaw, triggerRef } from 'vue'
+import type { App, ComputedRef, WritableComputedRef } from 'vue'
+import {
+  type Pinia,
+  type PiniaPlugin,
+  setActivePinia,
+  createPinia,
+  type StateTree,
+  type _DeepPartial,
+  type PiniaPluginContext,
+  type StoreGeneric,
+} from 'pinia'
+// NOTE: the implementation type is correct and contains up to date types
+// while the other types hide internal properties
+import type { ComputedRefImpl } from '@vue/reactivity'
+import { diagnostics } from './diagnostics'
+
+export interface TestingOptions {
+  /**
+   * Allows defining a partial initial state of all your stores. This state gets applied after a store is created,
+   * allowing you to only set a few properties that are required in your test.
+   */
+  initialState?: StateTree
+
+  /**
+   * Plugins to be installed before the testing plugin. Add any plugins used in
+   * your application that will be used while testing.
+   */
+  plugins?: PiniaPlugin[]
+
+  /**
+   * When set to false, actions are only spied, but they will still get executed. When
+   * set to true, **all** actions will be replaced with spies, resulting in their code
+   * not being executed. When set to an array of action names, only those actions
+   * will be stubbed. When set to a function, it will be called for each action with
+   * the action name and store instance, and should return true to stub the action.
+   *
+   * NOTE: when providing `createSpy()`,
+   * it will **only** make the `fn` argument `undefined`. You still have to
+   * handle this in `createSpy()`.
+   *
+   * @default true
+   */
+  stubActions?:
+    | boolean
+    | string[]
+    | ((actionName: string, store: StoreGeneric) => boolean)
+
+  /**
+   * When set to true, calls to `$patch()` won't change the state. Defaults to
+   * false. NOTE: when providing `createSpy()`, it will **only** make the `fn`
+   * argument `undefined`. You still have to handle this in `createSpy()`.
+   */
+  stubPatch?: boolean
+
+  /**
+   * When set to true, calls to `$reset()` won't change the state. Defaults to
+   * false.
+   */
+  stubReset?: boolean
+
+  /**
+   * Creates an empty App and calls `app.use(pinia)` with the created testing
+   * pinia. This allows you to use plugins while unit testing stores as
+   * plugins **will wait for pinia to be installed in order to be executed**.
+   * Defaults to false.
+   */
+  fakeApp?: boolean
+
+  /**
+   * Function used to create a spy for actions and `$patch()`. Pre-configured
+   * with `jest.fn` in Jest projects or `vi.fn` in Vitest projects if
+   * `globals: true` is set.
+   */
+  createSpy?: (fn?: (...args: any[]) => any) => (...args: any[]) => any
+}
+
+/**
+ * Pinia instance specifically designed for testing. Extends a regular
+ * `Pinia` instance with test specific properties.
+ */
+export interface TestingPinia extends Pinia {
+  /** App used by Pinia */
+  app: App
+}
+
+declare var vi:
+  | undefined
+  | {
+      fn: (fn?: (...args: any[]) => any) => (...args: any[]) => any
+    }
+
+/**
+ * Creates a pinia instance designed for unit tests that **requires mocking**
+ * the stores. By default, **all actions are mocked** and therefore not
+ * executed. This allows you to unit test your store and components separately.
+ * You can change this with the `stubActions` option. If you are using jest,
+ * they are replaced with `jest.fn()`, otherwise, you must provide your own
+ * `createSpy` option.
+ *
+ * @param options - options to configure the testing pinia
+ * @returns a augmented pinia instance
+ */
+export function createTestingPinia({
+  initialState = {},
+  plugins = [],
+  stubActions = true,
+  stubPatch = false,
+  stubReset = false,
+  fakeApp = false,
+  createSpy: _createSpy,
+}: TestingOptions = {}): TestingPinia {
+  const pinia = createPinia()
+
+  // allow adding initial state
+  pinia._p.push(({ store }) => {
+    if (initialState[store.$id]) {
+      mergeReactiveObjects(store.$state, initialState[store.$id])
+    }
+  })
+
+  // bypass waiting for the app to be installed to ensure the action stubbing happens last
+  plugins.forEach((plugin) => pinia._p.push(plugin))
+
+  // allow computed to be manually overridden
+  pinia._p.push(WritableComputed)
+
+  const createSpy =
+    _createSpy ||
+    // @ts-ignore
+    (typeof jest !== 'undefined' && (jest.fn as typeof _createSpy)) ||
+    (typeof vi !== 'undefined' && vi.fn)
+  /* istanbul ignore if */
+  if (!createSpy) {
+    throw diagnostics.PINIA_TESTING_C0001()
+  } else if (
+    typeof createSpy !== 'function' ||
+    // When users pass vi.fn() instead of vi.fn
+    // https://github.com/vuejs/pinia/issues/2896
+    'mockReturnValue' in createSpy
+  ) {
+    throw diagnostics.PINIA_TESTING_C0002()
+  }
+
+  // stub actions
+  pinia._p.push(({ store, options }) => {
+    Object.keys(options.actions).forEach((action) => {
+      if (action === '$reset') return
+
+      store[action] = shouldStubAction(stubActions, action, store)
+        ? createSpy()
+        : createSpy(store[action])
+    })
+
+    store.$patch = stubPatch ? createSpy() : createSpy(store.$patch)
+    store.$reset = stubReset ? createSpy() : createSpy(store.$reset)
+  })
+
+  if (fakeApp) {
+    const app = createApp({})
+    app.use(pinia)
+  }
+
+  pinia._testing = true
+
+  setActivePinia(pinia)
+
+  Object.defineProperty(pinia, 'app', {
+    configurable: true,
+    enumerable: true,
+    get(): App {
+      return this._a
+    },
+  })
+
+  return pinia as TestingPinia
+}
+
+function mergeReactiveObjects<T extends StateTree>(
+  target: T,
+  patchToApply: _DeepPartial<T>
+): T {
+  // no need to go through symbols because they cannot be serialized anyway
+  for (const key in patchToApply) {
+    if (!Object.hasOwn(patchToApply, key)) continue
+    const subPatch = patchToApply[key]
+    const targetValue = target[key]
+    if (
+      isPlainObject(targetValue) &&
+      isPlainObject(subPatch) &&
+      Object.hasOwn(target, key) &&
+      !isRef(subPatch) &&
+      !isReactive(subPatch)
+    ) {
+      target[key] = mergeReactiveObjects(targetValue, subPatch)
+    } else {
+      // @ts-expect-error: subPatch is a valid value
+      target[key] =
+        //
+        subPatch
+    }
+  }
+
+  return target
+}
+
+function isPlainObject<S extends StateTree>(value: S | unknown): value is S
+function isPlainObject(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  o: any
+): o is StateTree {
+  return (
+    o &&
+    typeof o === 'object' &&
+    Object.prototype.toString.call(o) === '[object Object]' &&
+    typeof o.toJSON !== 'function'
+  )
+}
+
+function isComputed<T>(
+  v: ComputedRef<T> | WritableComputedRef<T> | unknown
+): v is (ComputedRef<T> | WritableComputedRef<T>) & ComputedRefImpl<T> {
+  return !!v && isRef(v) && 'effect' in v
+}
+
+function WritableComputed({ store }: PiniaPluginContext) {
+  const rawStore = toRaw(store)
+  for (const key in rawStore) {
+    const originalComputed = rawStore[key]
+    if (isComputed(originalComputed)) {
+      const originalFn = originalComputed.fn
+      // override the computed with a new one
+      const overriddenFn = () =>
+        // @ts-expect-error: internal cached value
+        originalComputed._value
+      // originalComputed.fn = overriddenFn
+
+      rawStore[key] = computed<unknown>({
+        get() {
+          return originalComputed.value
+        },
+        set(newValue) {
+          // reset the computed to its original value by setting it to its initial state
+          if (newValue === undefined) {
+            originalComputed.fn = originalFn
+            // @ts-expect-error: private api to remove the current cached value
+            delete originalComputed._value
+            // @ts-expect-error: private api to force the recomputation
+            originalComputed._dirty = true
+          } else {
+            originalComputed.fn = overriddenFn
+            // @ts-expect-error: private api
+            originalComputed._value = newValue
+          }
+          // this allows to trigger the original computed in setup stores
+          triggerRef(originalComputed)
+        },
+      })
+    }
+  }
+}
+
+/**
+ * Should the given action be stubbed?
+ *
+ * @param stubActions - config option
+ * @param action - action name
+ * @param store - Store instance
+ */
+function shouldStubAction(
+  stubActions: TestingOptions['stubActions'],
+  action: string,
+  store: StoreGeneric
+): boolean {
+  if (typeof stubActions === 'boolean') {
+    return stubActions
+  } else if (Array.isArray(stubActions)) {
+    return stubActions.includes(action)
+  } else if (typeof stubActions === 'function') {
+    return stubActions(action, store)
+  }
+  return false
+}
