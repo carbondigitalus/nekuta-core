@@ -1,7 +1,7 @@
 import { useCallback, type ComponentProps, type ComponentType } from 'react';
-import type { NekutaInstance, StoreGeneric } from '../store';
-import { useSubscribeForRerender } from './subscription';
-import { useNekuta } from './useNekuta';
+import type { NekutaInstance, StoreGeneric } from '../store/index.js';
+import { useSubscribeForRerender } from './subscription.js';
+import { useNekuta } from './useNekuta.js';
 
 export type MapStoresToProps = Record<
     string,

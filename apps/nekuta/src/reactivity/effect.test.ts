@@ -1,5 +1,5 @@
-import { effect, stop } from './effect';
-import { reactive } from './reactive';
+import { effect, stop } from './effect.js';
+import { reactive } from './reactive.js';
 
 describe('effect()', () => {
     it('runs the passed function immediately', () => {

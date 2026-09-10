@@ -1,8 +1,8 @@
-import { ITERATE_KEY, MAP_KEY_ITERATE_KEY } from './dep';
-import { track, trigger, triggerAll } from './effect';
-import { TrackOpTypes, TriggerOpTypes } from './operations';
-import { ReactiveFlags, reactive, toRaw } from './reactive';
-import { hasChanged, hasOwn, isMap, isObject } from './shared';
+import { ITERATE_KEY, MAP_KEY_ITERATE_KEY } from './dep.js';
+import { track, trigger, triggerAll } from './effect.js';
+import { TrackOpTypes, TriggerOpTypes } from './operations.js';
+import { ReactiveFlags, reactive, toRaw } from './reactive.js';
+import { hasChanged, hasOwn, isMap, isObject } from './shared.js';
 
 type CollectionTypes = Map<unknown, unknown> | Set<unknown>;
 

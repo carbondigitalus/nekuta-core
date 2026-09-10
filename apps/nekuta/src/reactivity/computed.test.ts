@@ -1,7 +1,7 @@
-import { computed } from './computed';
-import { effect } from './effect';
-import { reactive } from './reactive';
-import { ref } from './ref';
+import { computed } from './computed.js';
+import { effect } from './effect.js';
+import { reactive } from './reactive.js';
+import { ref } from './ref.js';
 
 describe('computed()', () => {
     it('is lazy — the getter does not run until .value is first read', () => {

@@ -1,6 +1,6 @@
-import { effect } from './effect';
-import { isReactive, reactive } from './reactive';
-import { isRef, ref, toRef, toRefs, unref } from './ref';
+import { effect } from './effect.js';
+import { isReactive, reactive } from './reactive.js';
+import { isRef, ref, toRef, toRefs, unref } from './ref.js';
 
 describe('ref()', () => {
     it('tracks and triggers on .value access', () => {

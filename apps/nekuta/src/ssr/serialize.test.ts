@@ -1,10 +1,10 @@
-import { createNekuta, defineStore, type Nekuta } from '../store';
+import { createNekuta, defineStore, type Nekuta } from '../store/index.js';
 import {
     deserializeNekutaState,
     hydrateNekutaState,
     serializeNekutaState
-} from './serialize';
-import { skipHydrate } from './skipHydrate';
+} from './serialize.js';
+import { skipHydrate } from './skipHydrate.js';
 
 let nekuta: Nekuta;
 

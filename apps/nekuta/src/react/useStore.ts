@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
-import type { Nekuta, StoreGeneric } from '../store';
-import { useSubscribeForRerender } from './subscription';
-import { useNekuta } from './useNekuta';
+import type { Nekuta, StoreGeneric } from '../store/index.js';
+import { useSubscribeForRerender } from './subscription.js';
+import { useNekuta } from './useNekuta.js';
 
 export type UseStoreDefinition<S extends StoreGeneric> = (nekuta?: Nekuta) => S;
 

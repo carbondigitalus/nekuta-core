@@ -1,6 +1,6 @@
-import { effect } from './effect';
-import { effectScope, getCurrentScope, onScopeDispose } from './effectScope';
-import { reactive } from './reactive';
+import { effect } from './effect.js';
+import { effectScope, getCurrentScope, onScopeDispose } from './effectScope.js';
+import { reactive } from './reactive.js';
 
 describe('effectScope()', () => {
     it('captures effects created while running and stops them together', () => {

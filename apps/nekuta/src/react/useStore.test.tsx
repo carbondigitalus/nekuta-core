@@ -2,9 +2,9 @@
  * @jest-environment jsdom
  */
 import { act, render, screen } from '@testing-library/react';
-import { createNekuta, defineStore, type Nekuta } from '../store';
-import { NekutaProvider } from './context';
-import { useStore } from './useStore';
+import { createNekuta, defineStore, type Nekuta } from '../store/index.js';
+import { NekutaProvider } from './context.js';
+import { useStore } from './useStore.js';
 
 const useCounterStore = defineStore({
     id: 'counter',

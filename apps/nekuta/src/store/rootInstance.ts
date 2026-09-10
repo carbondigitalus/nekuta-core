@@ -1,4 +1,4 @@
-import type { Nekuta } from './createNekuta';
+import type { Nekuta } from './createNekuta.js';
 
 /**
  * A plain module-level singleton — the SSR-unsafe, non-Context-aware fallback Pinia itself falls

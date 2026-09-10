@@ -1,8 +1,8 @@
-import { createDep, type Dep } from './dep';
-import { ReactiveEffect, trackEffects, triggerEffects } from './effect';
-import { TriggerOpTypes } from './operations';
-import { isFunction } from './shared';
-import { refSymbol, type RefLike } from './ref';
+import { createDep, type Dep } from './dep.js';
+import { ReactiveEffect, trackEffects, triggerEffects } from './effect.js';
+import { TriggerOpTypes } from './operations.js';
+import { isFunction } from './shared.js';
+import { refSymbol, type RefLike } from './ref.js';
 
 export interface ComputedRef<T = unknown> {
     readonly value: T;

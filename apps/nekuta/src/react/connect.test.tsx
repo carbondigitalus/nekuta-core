@@ -3,9 +3,14 @@
  */
 import { Component } from 'react';
 import { act, render, screen } from '@testing-library/react';
-import { createNekuta, defineStore, type Nekuta, type Store } from '../store';
-import { NekutaProvider } from './context';
-import { connectStore, type MappedStoreProps } from './connect';
+import {
+    createNekuta,
+    defineStore,
+    type Nekuta,
+    type Store
+} from '../store/index.js';
+import { NekutaProvider } from './context.js';
+import { connectStore, type MappedStoreProps } from './connect.js';
 
 const useCounterStore = defineStore({
     id: 'counter',

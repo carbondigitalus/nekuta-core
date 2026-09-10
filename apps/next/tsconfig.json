@@ -5,11 +5,12 @@
         "declaration": true,
         "jsx": "react-jsx",
         "lib": ["ES2022", "DOM"],
-        "module": "esnext",
-        "moduleResolution": "bundler",
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "outDir": "./dist",
         "rootDir": "./src",
-        "strict": true
+        "strict": true,
+        "types": ["jest", "node", "@testing-library/jest-dom"]
     },
     "include": ["src"]
 }

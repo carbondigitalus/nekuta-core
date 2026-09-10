@@ -1,4 +1,4 @@
-import type { ComputedRef, Ref } from '../reactivity';
+import type { ComputedRef, Ref } from '../reactivity/index.js';
 
 export type StateTree = Record<string, unknown>;
 

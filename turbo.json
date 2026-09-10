@@ -125,7 +125,7 @@
             "dependsOn": ["^build"]
         },
         "test:unit": {
-            "dependsOn": [],
+            "dependsOn": ["^build"],
             "outputs": ["coverage/**"]
         },
         "test:e2e": {}

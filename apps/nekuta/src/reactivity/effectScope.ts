@@ -1,4 +1,4 @@
-import type { ReactiveEffect } from './effect';
+import type { ReactiveEffect } from './effect.js';
 
 let activeEffectScope: EffectScope | undefined;
 

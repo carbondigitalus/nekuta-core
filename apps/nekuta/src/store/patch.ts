@@ -1,5 +1,5 @@
-import { isRef } from '../reactivity';
-import type { DeepPartial, StateTree } from './types';
+import { isRef } from '../reactivity/index.js';
+import type { DeepPartial, StateTree } from './types.js';
 
 function isMergeableObject(value: unknown): value is StateTree {
     return Object.prototype.toString.call(value) === '[object Object]';

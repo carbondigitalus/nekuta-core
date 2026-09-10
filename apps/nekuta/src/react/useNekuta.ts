@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import { getActiveNekuta, type Nekuta } from '../store';
-import { NekutaContext } from './context';
+import { getActiveNekuta, type Nekuta } from '../store/index.js';
+import { NekutaContext } from './context.js';
 
 /**
  * Resolves the active Nekuta instance: a `<NekutaProvider>` above in the tree first, falling back

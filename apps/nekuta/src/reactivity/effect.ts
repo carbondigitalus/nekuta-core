@@ -1,11 +1,16 @@
-import { ITERATE_KEY, MAP_KEY_ITERATE_KEY, createDep, type Dep } from './dep';
-import { recordEffectScope } from './effectScope';
+import {
+    ITERATE_KEY,
+    MAP_KEY_ITERATE_KEY,
+    createDep,
+    type Dep
+} from './dep.js';
+import { recordEffectScope } from './effectScope.js';
 import {
     TriggerOpTypes,
     type DebuggerEventExtraInfo,
     type TrackOpTypes
-} from './operations';
-import { isArray, isIntegerKey, isMap } from './shared';
+} from './operations.js';
+import { isArray, isIntegerKey, isMap } from './shared.js';
 
 export type EffectScheduler = (...args: unknown[]) => void;
 

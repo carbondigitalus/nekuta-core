@@ -1,7 +1,7 @@
-export { skipHydrate, shouldHydrate } from './skipHydrate';
+export { skipHydrate, shouldHydrate } from './skipHydrate.js';
 export {
     serializeNekutaState,
     deserializeNekutaState,
     hydrateNekutaState,
     type SerializedNekutaState
-} from './serialize';
+} from './serialize.js';

@@ -1,7 +1,7 @@
-import { toRaw } from '../reactivity';
-import { isArray, isMap, isObject, isSet } from '../reactivity/shared';
-import type { Nekuta, StateTree } from '../store';
-import { shouldHydrate } from './skipHydrate';
+import { toRaw } from '../reactivity/index.js';
+import { isArray, isMap, isObject, isSet } from '../reactivity/shared.js';
+import type { Nekuta, StateTree } from '../store/index.js';
+import { shouldHydrate } from './skipHydrate.js';
 
 const MAP_TYPE = '__nekuta_map__';
 const SET_TYPE = '__nekuta_set__';

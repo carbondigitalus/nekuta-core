@@ -1,8 +1,8 @@
-import { ITERATE_KEY } from './dep';
-import { track, trigger } from './effect';
-import { TrackOpTypes, TriggerOpTypes } from './operations';
-import { ReactiveFlags, reactive, toRaw } from './reactive';
-import { isRef } from './ref';
+import { ITERATE_KEY } from './dep.js';
+import { track, trigger } from './effect.js';
+import { TrackOpTypes, TriggerOpTypes } from './operations.js';
+import { ReactiveFlags, reactive, toRaw } from './reactive.js';
+import { isRef } from './ref.js';
 import {
     hasChanged,
     hasOwn,
@@ -10,7 +10,7 @@ import {
     isIntegerKey,
     isObject,
     isSymbol
-} from './shared';
+} from './shared.js';
 
 const builtInSymbols = new Set(
     Object.getOwnPropertyNames(Symbol)

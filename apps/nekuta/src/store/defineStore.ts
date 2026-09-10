@@ -6,16 +6,16 @@ import {
     isRef,
     reactive,
     toRefs
-} from '../reactivity';
-import type { Nekuta } from './createNekuta';
-import { mergeReactiveObjects } from './patch';
-import { applyPlugins } from './plugins';
-import { getActiveNekuta } from './rootInstance';
+} from '../reactivity/index.js';
+import type { Nekuta } from './createNekuta.js';
+import { mergeReactiveObjects } from './patch.js';
+import { applyPlugins } from './plugins.js';
+import { getActiveNekuta } from './rootInstance.js';
 import {
     addSubscription,
     triggerSubscriptions,
     watchState
-} from './subscriptions';
+} from './subscriptions.js';
 import type {
     ActionListener,
     ActionListenerContext,
@@ -29,7 +29,7 @@ import type {
     SubscriptionOptions,
     _ActionsTree,
     _GettersTree
-} from './types';
+} from './types.js';
 
 function wrapAction(
     name: string,

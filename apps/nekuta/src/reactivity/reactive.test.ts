@@ -1,6 +1,6 @@
-import { effect } from './effect';
-import { isReactive, markRaw, reactive, toRaw } from './reactive';
-import { isRef, ref } from './ref';
+import { effect } from './effect.js';
+import { isReactive, markRaw, reactive, toRaw } from './reactive.js';
+import { isRef, ref } from './ref.js';
 
 describe('reactive()', () => {
     it('returns the same proxy for the same target (identity stability)', () => {

@@ -1,5 +1,10 @@
-import { effect, getCurrentScope, isRef, onScopeDispose } from '../reactivity';
-import { isMap, isObject, isSet } from '../reactivity/shared';
+import {
+    effect,
+    getCurrentScope,
+    isRef,
+    onScopeDispose
+} from '../reactivity/index.js';
+import { isMap, isObject, isSet } from '../reactivity/shared.js';
 
 export function addSubscription<T extends (...args: never[]) => unknown>(
     subscriptions: T[],

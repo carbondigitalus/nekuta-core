@@ -1,4 +1,4 @@
-import { shouldHydrate, skipHydrate } from './skipHydrate';
+import { shouldHydrate, skipHydrate } from './skipHydrate.js';
 
 describe('skipHydrate() / shouldHydrate()', () => {
     it('shouldHydrate() is true by default for any object', () => {

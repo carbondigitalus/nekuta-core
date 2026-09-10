@@ -1,10 +1,15 @@
-import { type EffectScope, effectScope, markRaw, ref } from '../reactivity';
+import {
+    type EffectScope,
+    effectScope,
+    markRaw,
+    ref
+} from '../reactivity/index.js';
 import type {
     NekutaInstance,
     NekutaPlugin,
     StateTree,
     StoreGeneric
-} from './types';
+} from './types.js';
 
 export interface Nekuta extends NekutaInstance {
     /** Root effect scope every store's own scope nests under, so `disposeNekuta()` tears down everything at once. */

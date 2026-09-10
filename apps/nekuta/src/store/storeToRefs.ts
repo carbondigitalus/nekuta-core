@@ -1,6 +1,6 @@
-import { toRaw, toRef } from '../reactivity';
-import type { Ref } from '../reactivity';
-import type { StateTree } from './types';
+import { toRaw, toRef } from '../reactivity/index.js';
+import type { Ref } from '../reactivity/index.js';
+import type { StateTree } from './types.js';
 
 export type StoreToRefs<S> = {
     [

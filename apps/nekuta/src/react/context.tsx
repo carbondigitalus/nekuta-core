@@ -1,5 +1,5 @@
 import { createContext, type ReactNode } from 'react';
-import type { Nekuta } from '../store';
+import type { Nekuta } from '../store/index.js';
 
 export const NekutaContext = createContext<Nekuta | undefined>(undefined);
 

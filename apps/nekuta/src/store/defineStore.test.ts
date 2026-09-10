@@ -1,9 +1,9 @@
-import { computed, ref } from '../reactivity';
-import { createNekuta, type Nekuta } from './createNekuta';
-import { defineStore } from './defineStore';
-import { getActiveNekuta, setActiveNekuta } from './rootInstance';
-import { storeToRefs } from './storeToRefs';
-import type { ActionListenerContext } from './types';
+import { computed, ref } from '../reactivity/index.js';
+import { createNekuta, type Nekuta } from './createNekuta.js';
+import { defineStore } from './defineStore.js';
+import { getActiveNekuta, setActiveNekuta } from './rootInstance.js';
+import { storeToRefs } from './storeToRefs.js';
+import type { ActionListenerContext } from './types.js';
 
 let nekuta: Nekuta;
 

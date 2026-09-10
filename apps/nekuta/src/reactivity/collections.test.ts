@@ -1,5 +1,5 @@
-import { effect } from './effect';
-import { isReactive, reactive, toRaw } from './reactive';
+import { effect } from './effect.js';
+import { isReactive, reactive, toRaw } from './reactive.js';
 
 describe('reactive() — Map', () => {
     it('tracks get/has/size and triggers on set/delete', () => {

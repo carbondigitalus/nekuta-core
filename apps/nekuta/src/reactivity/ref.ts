@@ -1,8 +1,8 @@
-import { createDep, type Dep } from './dep';
-import { trackEffects, triggerEffects } from './effect';
-import { TriggerOpTypes } from './operations';
-import { isReactive, reactive, toRaw } from './reactive';
-import { hasChanged, isArray, isObject } from './shared';
+import { createDep, type Dep } from './dep.js';
+import { trackEffects, triggerEffects } from './effect.js';
+import { TriggerOpTypes } from './operations.js';
+import { isReactive, reactive, toRaw } from './reactive.js';
+import { hasChanged, isArray, isObject } from './shared.js';
 
 export interface Ref<T = unknown> {
     value: T;

@@ -1,4 +1,4 @@
-import { createNekuta, disposeNekuta } from './createNekuta';
+import { createNekuta, disposeNekuta } from './createNekuta.js';
 
 describe('createNekuta()', () => {
     it('starts with an empty state tree, store registry, and plugin list', () => {

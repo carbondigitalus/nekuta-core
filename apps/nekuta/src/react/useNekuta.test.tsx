@@ -2,9 +2,9 @@
  * @jest-environment jsdom
  */
 import { render, screen } from '@testing-library/react';
-import { createNekuta, setActiveNekuta, type Nekuta } from '../store';
-import { NekutaProvider } from './context';
-import { useNekuta } from './useNekuta';
+import { createNekuta, setActiveNekuta, type Nekuta } from '../store/index.js';
+import { NekutaProvider } from './context.js';
+import { useNekuta } from './useNekuta.js';
 
 function Probe() {
     const nekuta = useNekuta();

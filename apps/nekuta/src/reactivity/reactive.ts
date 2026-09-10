@@ -1,7 +1,7 @@
-import { mutableHandlers } from './baseHandlers';
-import { mutableCollectionHandlers } from './collectionHandlers';
-import type { Ref } from './ref';
-import { isMap, isObject, isSet } from './shared';
+import { mutableHandlers } from './baseHandlers.js';
+import { mutableCollectionHandlers } from './collectionHandlers.js';
+import type { Ref } from './ref.js';
+import { isMap, isObject, isSet } from './shared.js';
 
 /**
  * A ref stored as a top-level property unwraps to its `.value` when read through a `reactive()`

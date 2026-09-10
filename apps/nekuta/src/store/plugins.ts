@@ -1,11 +1,11 @@
-import type { Nekuta } from './createNekuta';
+import type { Nekuta } from './createNekuta.js';
 import type {
     DefineStoreOptions,
     StateTree,
     StoreGeneric,
     _ActionsTree,
     _GettersTree
-} from './types';
+} from './types.js';
 
 export function applyPlugins<Id extends string, S extends StateTree>(
     nekuta: Nekuta,
