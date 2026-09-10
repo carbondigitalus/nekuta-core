@@ -6,7 +6,10 @@ import { nodeJestConfig } from '@nekuta/jest-config/node';
 
 const config: Config.InitialOptions = {
     ...nodeJestConfig,
-    collectCoverageFrom: ['src/**/*.ts'],
+    moduleFileExtensions: ['js', 'json', 'ts', 'tsx'],
+    testRegex: '.*\\.test\\.tsx?$',
+    setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+    collectCoverageFrom: ['src/**/*.{ts,tsx}'],
     coveragePathIgnorePatterns: [
         '/node_modules/',
         '/.turbo/',

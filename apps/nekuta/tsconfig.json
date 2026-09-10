@@ -9,7 +9,8 @@
         "moduleResolution": "bundler",
         "outDir": "./dist",
         "rootDir": "./src",
-        "strict": true
+        "strict": true,
+        "types": ["jest", "node", "@testing-library/jest-dom"]
     },
     "include": ["src"]
 }
