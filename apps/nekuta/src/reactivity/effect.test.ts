@@ -1,4 +1,10 @@
-import { effect, stop } from './effect.js';
+import {
+    effect,
+    resetEffectTracking,
+    stop,
+    trackWith,
+    ReactiveEffect
+} from './effect.js';
 import { reactive } from './reactive.js';
 
 describe('effect()', () => {
@@ -101,5 +107,63 @@ describe('effect()', () => {
 
         expect(fn).toHaveBeenCalledTimes(1);
         expect(scheduler).toHaveBeenCalledTimes(1);
+    });
+
+    it('a stopped effect does not get re-added to a dep it is read through afterward', () => {
+        const state = reactive({ count: 0 });
+        const scheduler = jest.fn();
+        const runner = effect(() => state.count, scheduler);
+
+        stop(runner);
+        // Read `state.count` again while the (now-inactive) effect is still the active one —
+        // this shouldn't happen in normal usage, but a stopped effect must stay inert regardless.
+        trackWith(runner.effect, () => state.count);
+
+        state.count++;
+
+        expect(scheduler).not.toHaveBeenCalled();
+    });
+
+    it("a stopped effect's scheduler never fires even if trigger() somehow reaches it", () => {
+        const state = reactive({ count: 0 });
+        const scheduler = jest.fn();
+        const trackingEffect = new ReactiveEffect(() => {}, scheduler);
+
+        trackWith(trackingEffect, () => state.count);
+        trackingEffect.stop();
+        state.count++;
+
+        expect(scheduler).not.toHaveBeenCalled();
+    });
+});
+
+describe('trackWith() / resetEffectTracking()', () => {
+    it('accumulates dependencies across multiple separate reads without clearing between them', () => {
+        const a = reactive({ value: 1 });
+        const b = reactive({ value: 1 });
+        const scheduler = jest.fn();
+        const trackingEffect = new ReactiveEffect(() => {}, scheduler);
+
+        trackWith(trackingEffect, () => a.value);
+        trackWith(trackingEffect, () => b.value); // must not clear the dependency on `a` from above
+
+        a.value++;
+        expect(scheduler).toHaveBeenCalledTimes(1);
+
+        b.value++;
+        expect(scheduler).toHaveBeenCalledTimes(2);
+    });
+
+    it('resetEffectTracking() drops previously tracked dependencies, starting the next collection fresh', () => {
+        const a = reactive({ value: 1 });
+        const scheduler = jest.fn();
+        const trackingEffect = new ReactiveEffect(() => {}, scheduler);
+
+        trackWith(trackingEffect, () => a.value);
+        resetEffectTracking(trackingEffect);
+
+        a.value++;
+
+        expect(scheduler).not.toHaveBeenCalled();
     });
 });

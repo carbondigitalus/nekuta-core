@@ -15,7 +15,7 @@ const counter = useStore(useCounterStore);
 counter.count;
 ```
 
-This is possible because Nekuta's state is reactive (Proxy-based, tracking reads/writes automatically — see [Reactivity Model](../core-concepts/reactivity-model.md)), not a plain object a selector has to pick apart. The tradeoff today: Nekuta doesn't yet track _which_ properties a given component's render actually used, so — unlike a well-written Zustand selector — `useStore()` re-renders on any change to the store, not just the parts a component reads. If you're migrating a component that relies heavily on narrow selectors for render-performance reasons, that's the one place behavior genuinely differs; see the same Reactivity Model page for status.
+This is possible because Nekuta's state is reactive (Proxy-based, tracking reads/writes automatically — see [Reactivity Model](../core-concepts/reactivity-model.md)), not a plain object a selector has to pick apart: `useStore()` tracks exactly which properties a component's render actually used and only re-renders for those, the same result a well-written Zustand selector gets, without you having to write the selector.
 
 ## Mutation, not reducers
 

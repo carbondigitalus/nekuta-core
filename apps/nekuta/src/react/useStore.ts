@@ -1,16 +1,16 @@
 'use client';
 
-import { useCallback } from 'react';
 import type { Nekuta, StoreGeneric } from '../store/index.js';
-import { useSubscribeForRerender } from './subscription.js';
+import { useTrackedProxy } from './subscription.js';
 import { useNekuta } from './useNekuta.js';
 
 export type UseStoreDefinition<S extends StoreGeneric> = (nekuta?: Nekuta) => S;
 
 /**
  * Resolves `useStoreDefinition` against the active Nekuta instance and re-renders the calling
- * component on any subsequent change to that store — coarse-grained for now (any change re-renders,
- * not just the specific properties this component happens to read; see Milestone 9 in the plan).
+ * component only when a property it actually reads changes — fine-grained, matching Pinia's DX
+ * (see Milestone 9's notes in the plan for how: the returned store is a tracked proxy, not the
+ * store itself, built on the reactivity engine's own dependency tracking).
  */
 export function useStore<S extends StoreGeneric>(
     useStoreDefinition: UseStoreDefinition<S>
@@ -18,13 +18,5 @@ export function useStore<S extends StoreGeneric>(
     const nekuta = useNekuta();
     const store = useStoreDefinition(nekuta);
 
-    const subscribe = useCallback(
-        (onChange: () => void) =>
-            store.$subscribe(onChange, { detached: true }),
-        [store]
-    );
-
-    useSubscribeForRerender(subscribe);
-
-    return store;
+    return useTrackedProxy(store);
 }

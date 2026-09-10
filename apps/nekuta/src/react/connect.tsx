@@ -1,8 +1,8 @@
 'use client';
 
-import { useCallback, type ComponentProps, type ComponentType } from 'react';
+import type { ComponentProps, ComponentType } from 'react';
 import type { NekutaInstance, StoreGeneric } from '../store/index.js';
-import { useSubscribeForRerender } from './subscription.js';
+import { useTrackedProxy } from './subscription.js';
 import { useNekuta } from './useNekuta.js';
 
 export type MapStoresToProps = Record<
@@ -29,21 +29,11 @@ function useMappedStores<M extends MapStoresToProps>(
         ) as MappedStoreProps<M>[keyof M];
     }
 
-    const subscribe = useCallback(
-        (onChange: () => void) => {
-            const unsubscribes = Object.keys(mapStoresToProps).map((key) =>
-                mapStoresToProps[key](nekuta).$subscribe(onChange, {
-                    detached: true
-                })
-            );
-            return () => unsubscribes.forEach((unsubscribe) => unsubscribe());
-        },
-        [nekuta, mapStoresToProps]
-    );
-
-    useSubscribeForRerender(subscribe);
-
-    return stores;
+    // `stores` is a fresh plain object every render, but that's fine — it isn't itself what needs
+    // tracking; useTrackedProxy recursively wraps whatever object each property resolves to, and
+    // THOSE (the actual stores) are reactive, so per-property tracking still works correctly one
+    // level down, same as useStore()'s single-store case.
+    return useTrackedProxy(stores);
 }
 
 /**

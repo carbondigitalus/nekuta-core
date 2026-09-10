@@ -126,4 +126,80 @@ describe('connectStore()', () => {
 
         expect(screen.getByTestId('multi')).toHaveTextContent('0 things');
     });
+
+    it('only re-renders for properties actually read — an unrelated property on the same store does not', () => {
+        const useMultiStore = defineStore({
+            id: 'multiProp',
+            state: () => ({ tracked: 0, untracked: 0 })
+        });
+
+        let renderCount = 0;
+        class TrackedOnly extends Component<
+            MappedStoreProps<{ multi: typeof useMultiStore }>
+        > {
+            override render() {
+                renderCount++;
+                return (
+                    <span data-testid="tracked">
+                        {this.props.multi.tracked}
+                    </span>
+                );
+            }
+        }
+        const Connected = connectStore({ multi: useMultiStore }, TrackedOnly);
+
+        const nekuta = createNekuta();
+        renderWithNekuta(nekuta, <Connected />);
+        expect(renderCount).toBe(1);
+
+        act(() => {
+            useMultiStore(nekuta).untracked++;
+        });
+        expect(renderCount).toBe(1);
+
+        act(() => {
+            useMultiStore(nekuta).tracked++;
+        });
+        expect(renderCount).toBe(2);
+        expect(screen.getByTestId('tracked')).toHaveTextContent('1');
+    });
+
+    it('mapping a store does not force a re-render if render() never actually reads it', () => {
+        let renderCount = 0;
+        // `label` is mapped (injected as a prop) but never read in render() — mutating it should
+        // not re-render this component, even though it's one of the mapped stores.
+        class CounterOnly extends Component<
+            MappedStoreProps<{
+                counter: typeof useCounterStore;
+                label: typeof useLabelStore;
+            }>
+        > {
+            override render() {
+                renderCount++;
+                return (
+                    <span data-testid="counter-only">
+                        {this.props.counter.count}
+                    </span>
+                );
+            }
+        }
+        const Connected = connectStore(
+            { counter: useCounterStore, label: useLabelStore },
+            CounterOnly
+        );
+
+        const nekuta = createNekuta();
+        renderWithNekuta(nekuta, <Connected />);
+        expect(renderCount).toBe(1);
+
+        act(() => {
+            useLabelStore(nekuta).label = 'things';
+        });
+        expect(renderCount).toBe(1);
+
+        act(() => {
+            useCounterStore(nekuta).count++;
+        });
+        expect(renderCount).toBe(2);
+    });
 });

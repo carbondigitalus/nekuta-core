@@ -76,4 +76,4 @@ const Dashboard = connectStore(
 
 ## Under the hood
 
-`connectStore()` is itself a _function_ component internally — it uses hooks, resolves the mapped stores, and passes the results down as props. Your class component never touches a hook directly; it just receives props like any other. This is why it works inside a class component at all, and also why it's a bit coarser-grained than `useStore()`: it re-renders on any change to any of the mapped stores, not just properties your `render()` actually reads.
+`connectStore()` is itself a _function_ component internally — it uses hooks, resolves the mapped stores, and passes the results down as props. Your class component never touches a hook directly; it just receives props like any other. This is why it works inside a class component at all — and it's built on the same fine-grained tracking `useStore()` uses (see [Reactivity Model](../core-concepts/reactivity-model.md)): mapping a store as a prop your `render()` never actually reads doesn't cause re-renders for that store either.

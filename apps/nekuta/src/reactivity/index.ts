@@ -1,6 +1,8 @@
 export {
     effect,
     stop,
+    trackWith,
+    resetEffectTracking,
     type ReactiveEffectRunner,
     type EffectScheduler,
     ReactiveEffect

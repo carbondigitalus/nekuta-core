@@ -3,6 +3,7 @@
  */
 import { act, render, screen } from '@testing-library/react';
 import { createNekuta, defineStore, type Nekuta } from '../store/index.js';
+import { ReactiveEffect } from '../reactivity/index.js';
 import { NekutaProvider } from './context.js';
 import { useStore } from './useStore.js';
 
@@ -100,16 +101,82 @@ describe('useStore()', () => {
         ).toHaveTextContent('0');
     });
 
-    it('unsubscribes from the store on unmount', () => {
+    it('stops its tracking effect on unmount, so a later mutation no longer notifies it', () => {
         const nekuta = createNekuta();
-        const store = useCounterStore(nekuta);
-        const unsubscribeSpy = jest.fn();
-        jest.spyOn(store, '$subscribe').mockReturnValue(unsubscribeSpy);
+        const stopSpy = jest.spyOn(ReactiveEffect.prototype, 'stop');
 
         const { unmount } = renderWithNekuta(nekuta, <Counter />);
-        expect(unsubscribeSpy).not.toHaveBeenCalled();
+        expect(stopSpy).not.toHaveBeenCalled();
 
         unmount();
-        expect(unsubscribeSpy).toHaveBeenCalledTimes(1);
+        expect(stopSpy).toHaveBeenCalledTimes(1);
+
+        stopSpy.mockRestore();
+
+        // A mutation after unmount must not throw, even though nothing is listening anymore.
+        expect(() => {
+            act(() => {
+                useCounterStore(nekuta).count++;
+            });
+        }).not.toThrow();
+    });
+
+    it('only re-renders for properties actually read — an unrelated property change does not', () => {
+        const useMultiStore = defineStore({
+            id: 'multi',
+            state: () => ({ tracked: 0, untracked: 0 })
+        });
+
+        let renderCount = 0;
+        function TrackedOnly() {
+            renderCount++;
+            const store = useStore(useMultiStore);
+            return <span data-testid="tracked">{store.tracked}</span>;
+        }
+
+        const nekuta = createNekuta();
+        renderWithNekuta(nekuta, <TrackedOnly />);
+        expect(renderCount).toBe(1);
+
+        act(() => {
+            useMultiStore(nekuta).untracked++;
+        });
+        expect(renderCount).toBe(1);
+
+        act(() => {
+            useMultiStore(nekuta).tracked++;
+        });
+        expect(renderCount).toBe(2);
+        expect(screen.getByTestId('tracked')).toHaveTextContent('1');
+    });
+
+    it('tracks NESTED property reads too, not just top-level ones', () => {
+        const useNestedStore = defineStore({
+            id: 'nested',
+            state: () => ({ user: { name: 'Ada', other: 0 } })
+        });
+
+        let renderCount = 0;
+        function NameOnly() {
+            renderCount++;
+            const store = useStore(useNestedStore);
+            return <span data-testid="name">{store.user.name}</span>;
+        }
+
+        const nekuta = createNekuta();
+        renderWithNekuta(nekuta, <NameOnly />);
+        expect(renderCount).toBe(1);
+
+        // A sibling property on the SAME nested object, never read — must not re-render.
+        act(() => {
+            useNestedStore(nekuta).user.other++;
+        });
+        expect(renderCount).toBe(1);
+
+        act(() => {
+            useNestedStore(nekuta).user.name = 'Grace';
+        });
+        expect(renderCount).toBe(2);
+        expect(screen.getByTestId('name')).toHaveTextContent('Grace');
     });
 });

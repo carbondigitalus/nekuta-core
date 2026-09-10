@@ -163,7 +163,7 @@ Recommended IA, adapted from Pinia's own docs structure for React/Next:
 6. **Next.js adapter** (`apps/next`) — Pages Router support first (simpler, validates the hydration handoff), then App Router support (adds the RSC boundary).
 7. **Playground app** — built directly against both of `@nekuta/next`'s router demos.
 8. **Docs content** — conceptual pages can start as soon as step 4's APIs stabilize, in parallel with steps 6/7; SSR-section docs wait on step 6.
-9. **Fine-grained `useStore` optimization** — the effect-tracked, per-property-read `getSnapshot` upgrade described above, as a non-breaking enhancement once both bindings and at least one adapter are proven end-to-end.
+9. **Fine-grained `useStore`/`connectStore` optimization** (done) — both bindings now return a tracked proxy (deep, not just top-level) built on the reactivity engine's own `track()`/`trigger()`, instead of the coarse `$subscribe`-based approach described in step 4 above. Turned out `getSnapshot` itself can't carry the tracking-reset side effect it was originally sketched with — React's contract allows calling it more than once per render, which silently wiped out the current render's just-collected dependencies; the reset now happens once in the hook body itself instead. Also fixed a latent gap surfaced along the way: a stopped `ReactiveEffect` could still be re-added to a dependency set and have its scheduler fire — `trackEffects()`/`triggerEffects()` now both check `.active`.
 10. **Release automation hardening** — full `gulp release` pipeline, CI/Codecov (if and when re-added), complete before the first real public `@nekuta/core` publish.
 
 ### Verification

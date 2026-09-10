@@ -1,36 +1,56 @@
 'use client';
 
-import { useCallback, useRef, useSyncExternalStore } from 'react';
+import { useCallback, useMemo, useRef, useSyncExternalStore } from 'react';
+import { ReactiveEffect, resetEffectTracking } from '../reactivity/index.js';
+import { createTrackedProxy } from './trackedProxy.js';
 
 /**
- * Bridges a Nekuta subscription (fires on ANY relevant change, no fine-grained dependency
- * tracking yet — see the plan's Milestone 9) to React's `useSyncExternalStore`.
+ * Wraps `target` (a store, or a plain `{ key: store }` map for connectStore's multiple-store
+ * case) in a tracked proxy and re-renders the calling component only when a property it actually
+ * READ during its last render changes — not on any change to the underlying store(s), the coarse
+ * behavior Milestone 4 shipped with. Fine-grained tracking, matching Pinia's DX.
  *
- * `useSyncExternalStore` decides whether to re-render by comparing `getSnapshot()`'s result
- * across calls with `Object.is` — but a Nekuta store mutates its state IN PLACE (same object
- * reference before and after a change), so the store itself can't be the snapshot value. Instead
- * a version counter is bumped inside the subscription callback and returned as the snapshot: a
- * plain number that's trivially a new value (by `Object.is`) every time something changed.
+ * One `ReactiveEffect` lives for the whole lifetime of the hook (a ref, not recreated per render).
+ * Its scheduler — called by the reactivity engine's own trigger() whenever a tracked dependency
+ * changes, no separate subscription mechanism needed — bumps a version counter and notifies
+ * useSyncExternalStore. Dependencies tracked during the PREVIOUS render are dropped once, here in
+ * the hook body (which runs exactly once per actual render) — deliberately NOT inside getSnapshot,
+ * which React's own contract allows calling more than once per render for its internal consistency
+ * checks; a side effect there would wipe out the current render's just-collected tracking the
+ * moment React re-invoked it, which is exactly what happened before this was split out.
  */
-export function useSubscribeForRerender(
-    subscribe: (onStoreChange: () => void) => () => void
-): void {
+export function useTrackedProxy<T extends object>(target: T): T {
     const versionRef = useRef(0);
+    const notifyRef = useRef<(() => void) | null>(null);
 
-    const stableSubscribe = useCallback(
-        (onStoreChange: () => void) =>
-            subscribe(() => {
+    const effectRef = useRef<ReactiveEffect | null>(null);
+    if (!effectRef.current) {
+        effectRef.current = new ReactiveEffect(
+            () => {},
+            () => {
                 versionRef.current++;
-                onStoreChange();
-            }),
-        [subscribe]
-    );
+                notifyRef.current?.();
+            }
+        );
+    }
+
+    resetEffectTracking(effectRef.current);
+
+    const subscribe = useCallback((onStoreChange: () => void) => {
+        notifyRef.current = onStoreChange;
+        return () => {
+            notifyRef.current = null;
+            effectRef.current?.stop();
+        };
+    }, []);
 
     const getSnapshot = useCallback(() => versionRef.current, []);
 
-    // getServerSnapshot: required whenever this can be part of a server-rendered/statically
-    // generated tree (any Next.js App Router page not explicitly forced dynamic) — without it,
-    // React errors during prerendering. The version counter's fresh-mount value (0) is exactly
-    // the right server snapshot: there's no prior subscription state to diverge from during SSR.
-    useSyncExternalStore(stableSubscribe, getSnapshot, getSnapshot);
+    useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- effectRef.current is stable for the hook's lifetime
+    return useMemo(
+        () => createTrackedProxy(target, effectRef.current!),
+        [target]
+    );
 }

@@ -23,11 +23,12 @@ Those are all good libraries, and if you're starting fresh with no Vue backgroun
 - **Options-style** stores (`state`/`getters`/`actions`, like Pinia's Options API) and **setup-style** stores (a function returning refs/computed/functions, like Pinia's `<script setup>` style) — the same two flavors, converging on one engine.
 - `$patch`, `$subscribe`, `$onAction`, `$reset`, `$dispose`, `storeToRefs()`, plugins.
 - SSR/hydration for Next.js, both routers.
+- **Fine-grained re-renders** — a component only re-renders for the specific (deeply-nested, too) properties it actually reads, matching Pinia's DX exactly. See [Reactivity Model](./core-concepts/reactivity-model.md) for how.
 
 ## What's intentionally not built yet
 
-- **Fine-grained reactivity in React bindings.** `useStore()` currently re-renders a component on _any_ change to the store it's reading, not just the specific properties that component actually read during render (Pinia/Vue get this for free from Vue's compiler; React has no equivalent). This is a planned follow-up, not a design dead-end — see the [reactivity model](./core-concepts/reactivity-model.md) page for what this means in practice today.
-- **A DevTools browser extension.** Vue DevTools' Pinia integration doesn't have a React equivalent yet — planned as a separate project.
+**A DevTools browser extension.** Vue DevTools' Pinia integration doesn't have a React equivalent yet — planned as a separate project.
+
 - **A dedicated testing package.** There's no `createTestingPinia()`-equivalent; see [Testing](./cookbook/testing.md) for how to test stores directly with Jest instead.
 
 Start with [Installation](./getting-started/installation.md) or jump straight to the [Quick Start](./getting-started/quick-start.md).

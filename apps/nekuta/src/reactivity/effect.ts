@@ -97,6 +97,31 @@ export function getCurrentEffect(): ReactiveEffect | undefined {
     return activeEffect;
 }
 
+/**
+ * Runs `fn` with `effect` as the active tracking target, WITHOUT the cleanup/re-run lifecycle
+ * `effect.run()` carries — any `track()` calls inside `fn` register `effect` as a dependent, same
+ * as a normal effect run, but existing deps on `effect` from previous calls are left untouched.
+ * Built for React bindings that need to accumulate dependencies across many separate, individually
+ * synchronous property reads spread across a single render (see react/trackedProxy.ts) — a single
+ * `.run()` call can't model that, since it wraps exactly one synchronous function call and cleans
+ * up on every call.
+ */
+export function trackWith<T>(effect: ReactiveEffect, fn: () => T): T {
+    const prevEffect = activeEffect;
+    activeEffect = effect;
+
+    try {
+        return fn();
+    } finally {
+        activeEffect = prevEffect;
+    }
+}
+
+/** Drops all of `effect`'s current dependencies without deactivating it — the counterpart to `trackWith`, called once per render to discard the previous render's tracked reads before collecting a fresh set. */
+export function resetEffectTracking(effect: ReactiveEffect): void {
+    cleanupEffect(effect);
+}
+
 const targetMap = new WeakMap<object, Map<unknown, Dep>>();
 
 export function track(target: object, type: TrackOpTypes, key: unknown): void {
@@ -123,7 +148,7 @@ export function trackEffects(
     type?: TrackOpTypes,
     key?: unknown
 ): void {
-    if (!activeEffect || dep.has(activeEffect)) {
+    if (!activeEffect || !activeEffect.active || dep.has(activeEffect)) {
         return;
     }
 
@@ -239,6 +264,10 @@ function runTriggeredEffect(
     effect: ReactiveEffect,
     extraInfo?: DebuggerEventExtraInfo
 ): void {
+    if (!effect.active) {
+        return;
+    }
+
     if (effect.onTrigger && extraInfo) {
         effect.onTrigger(extraInfo);
     }

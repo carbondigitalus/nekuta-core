@@ -26,6 +26,5 @@ If you already know Pinia, most of this is a rename exercise. The table below is
 ## What's genuinely different
 
 - **Functional vs. class components, not Options vs. Composition API.** Pinia works identically from either Vue API because Vue's own split there doesn't affect state management. React's split does — see [Class Components](../getting-started/class-components.md) if you're coming from an Options API codebase; `connectStore()` is the closest equivalent to `mapStores()`.
-- **Reactivity is fine-grained in Vue's templates, not (yet) in Nekuta's React bindings.** A Vue template only re-renders for state it actually used, because Vue's compiler generates that tracking. React has no compiler step doing the same for Nekuta's hooks yet — see [Reactivity Model](../core-concepts/reactivity-model.md).
 - **No dedicated testing package.** Pinia has `@pinia/testing`; Nekuta doesn't — see [Testing](./testing.md) for the direct alternative.
 - **Cross-store getters need care during Next.js App Router SSR.** A getter calling another store's bare accessor is fully supported and works the same as Pinia everywhere else, but see [Getters](../core-concepts/getters.md#cross-store-getters--a-caveat) for the one place it doesn't translate cleanly (React's streaming SSR model, not something Vue's own SSR has to contend with the same way).

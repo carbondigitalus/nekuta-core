@@ -26,7 +26,7 @@ Internally, `useStore()`:
 
 1. Resolves the active [`Nekuta`](./create-nekuta.md) instance via [`useNekuta()`](#usenekuta) (Context, or the module-level singleton fallback).
 2. Calls `useStoreDefinition(nekuta)` to get the store.
-3. Subscribes to it (via `$subscribe`) and re-renders on any change — see [Reactivity Model](../core-concepts/reactivity-model.md) for the "any change," not fine-grained yet, caveat.
+3. Returns a tracked proxy over it, re-rendering the component only when a property it actually reads changes — see [Reactivity Model](../core-concepts/reactivity-model.md) for how.
 
 Must be called inside a component wrapped in [`<NekutaProvider>`](./nekuta-provider.md) (or with an active instance set via `setActiveNekuta()`) — otherwise it throws.
 

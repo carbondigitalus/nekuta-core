@@ -23,18 +23,23 @@ state.count++; // does re-run it
 
 This is the same mechanism `@vue/reactivity` provides for Vue, ported from scratch for Nekuta rather than depending on Vue at all. It's what makes getters "just work" — a getter is a `computed()`, and a `computed()` is a memoized `effect()` that only invalidates when something it actually read changes, the same as [Getters](./getters.md) describes.
 
-## What this means for `useStore()` today
+## What this means for `useStore()` and `connectStore()`
 
-Here's the one place Nekuta and Pinia currently differ in _behavior_, not just implementation: Vue's compiler generates a render function that's itself a reactive effect, so a component only re-renders when a property it actually rendered changes. React has no equivalent — there's no compiler step generating fine-grained per-component dependency tracking.
+Vue's compiler generates a render function that's itself a reactive effect, so a Vue template only re-renders when a property it actually rendered changes — React has no compiler step doing the equivalent for JSX. Nekuta gets the same result a different way: `useStore()` and `connectStore()` return a **tracked proxy**, not the store itself. Reading a property through it — `counter.count` in your JSX, exactly as you'd already write it — records that read against a dependency effect scoped to that component instance, using the same `track()`/`trigger()` machinery described above, not a separate bookkeeping system. A component only re-renders when a property it actually read last render changes; an unrelated property on the same store changing does nothing.
 
-`useStore()` and `connectStore()` currently re-render on **any** change to the store(s) they're reading, not just the specific properties a component's render actually used. A component reading only `counter.count` will still re-render if some _other_ property on the same store changes.
+```tsx
+function Counter() {
+    const counter = useStore(useCounterStore);
+    return <p>{counter.count}</p>; // only `count` is tracked — other properties on this store can change freely
+}
+```
 
-In practice this is rarely a problem — React's own reconciliation means an unnecessary re-render that produces the same output is cheap, not incorrect — but it's worth knowing about if you're debugging a re-render you didn't expect, or profiling a store with many independent pieces of state read by many different components.
+Tracking is deep, not just top-level — `counter.user.name` tracks specifically `name` on the nested `user` object, so a sibling property changing on that same nested object doesn't re-render it either. Tracking is also per-render: which properties count as "read" is recomputed from scratch every render, so a component that conditionally reads different properties (`flag ? a.x : b.y`) correctly tracks whichever branch it actually took last time, the same re-tracking behavior a Vue effect has.
 
-Fine-grained tracking (a component only re-rendering for state it actually reads, matching Pinia's DX exactly) is planned as a non-breaking enhancement on top of the same `useStore()`/`connectStore()` APIs — see the project's build plan for status.
+This applies equally to `connectStore()` — mapping a store as a prop that a class component's `render()` never actually reads doesn't cause re-renders for that store either.
 
 ## The bridge to React: `useSyncExternalStore`
 
-Both `useStore()` and `connectStore()` are built on React's `useSyncExternalStore` under the hood. One detail worth knowing if you're ever reading Nekuta's own source: `useSyncExternalStore` decides whether to re-render by comparing a snapshot value across calls, but a Nekuta store mutates its state **in place** — same object reference before and after a change — so the store itself can't be the snapshot. Nekuta instead tracks a version counter that increments on every relevant change and uses _that_ as the snapshot, which is a plain number and trivially a "new value" each time something changed.
+Both `useStore()` and `connectStore()` are built on React's `useSyncExternalStore` under the hood, for the tearing-safety guarantees React's own docs describe for external stores. One detail worth knowing if you're ever reading Nekuta's own source: `useSyncExternalStore` decides whether to re-render by comparing a snapshot value across calls, but a Nekuta store mutates its state **in place** — same object reference before and after a change — so the store itself can't be the snapshot. Nekuta instead tracks a version counter, scoped to each component's own tracked dependencies, that increments only when one of THOSE dependencies changes — a plain number, trivially a "new value" by `Object.is` whenever it matters.
 
-You don't need to know this to use Nekuta — it's purely an implementation detail — but it explains why re-renders are coarse today: the version counter increments on **any** subscribed change, with no per-property distinction (yet).
+You don't need to know any of this to use Nekuta day to day — it's purely an implementation detail.
