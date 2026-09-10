@@ -1,4 +1,4 @@
 {
-    "extends": "@veterandb/typescript-config/base.json",
+    "extends": "@nekuta/typescript-config/base.json",
     "files": []
 }

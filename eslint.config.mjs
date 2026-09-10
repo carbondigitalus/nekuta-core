@@ -1,5 +1,5 @@
 // Shared Modules
-import { baseConfig } from '@veterandb/eslint-config/base';
+import { baseConfig } from '@nekuta/eslint-config/base';
 
 export default [
     {

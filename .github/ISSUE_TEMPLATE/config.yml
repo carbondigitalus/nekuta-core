@@ -1,11 +1,8 @@
 blank_issues_enabled: false
 contact_links:
     - name: Ask Questions
-      url: https://github.com/carbondigitalus/veterandb-backend/issues/new/?category=question
+      url: https://github.com/carbondigitalus/nekuta/issues/new/?category=question
       about: Create a support ticket to get help from developers. Please note that our discord community can be faster.
-    - name: Discord
-      url: https://discord.gg/jatU44PavX
-      about: The Veteran Database Community, for general VeteranDB questions or help.
     - name: Facebook Group
-      url: https://www.facebook.com/groups/veterandbcommunity/
-      about: The Veteran Database Community, for general VeteranDB questions or help.
+      url: https://www.facebook.com/groups/nekutareactstores/
+      about: The Nekuta Community, for general Nekuta questions or help.

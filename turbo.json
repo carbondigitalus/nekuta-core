@@ -15,16 +15,16 @@
             "inputs": ["$TURBO_DEFAULT$", ".env.production"],
             "outputs": ["dist/**"]
         },
-        "@veterandb/docs#build": {
+        "@nekuta/docs#build": {
             "dependsOn": ["^build"],
             "outputs": ["build/**"]
         },
-        "@veterandb/content#build": {
+        "@nekuta/content#build": {
             "dependsOn": ["^build"],
             "env": ["NODE_ENV", "PORT", "DATABASE_URI", "PAYLOAD_SECRET"],
             "outputs": [".next/**", "!.next/cache/**"]
         },
-        "@veterandb/portal#build": {
+        "@nekuta/portal#build": {
             "dependsOn": ["^build"],
             "env": [
                 "NODE_ENV",
@@ -50,7 +50,7 @@
             ],
             "outputs": [".next/**", "!.next/cache/**"]
         },
-        "@veterandb/sso#build": {
+        "@nekuta/sso#build": {
             "dependsOn": ["^build"],
             "env": [
                 "NODE_ENV",
@@ -63,7 +63,7 @@
             ],
             "outputs": [".next/**", "!.next/cache/**"]
         },
-        "@veterandb/web#build": {
+        "@nekuta/web#build": {
             "dependsOn": ["^build"],
             "env": [
                 "NODE_ENV",
@@ -91,7 +91,7 @@
                 "public/sitemap*.xml"
             ]
         },
-        "@veterandb/web#build:staging": {
+        "@nekuta/web#build:staging": {
             "dependsOn": ["^build"],
             "env": [
                 "NODE_ENV",

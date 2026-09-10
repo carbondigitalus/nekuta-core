@@ -1,8 +1,8 @@
 export default function useDocusaurusContext() {
     return {
         siteConfig: {
-            title: 'Veteran Database',
-            tagline: 'The official docs for our VeteranDB platform.'
+            title: 'Nekuta',
+            tagline: 'The official docs for our Nekuta stores for React.'
         }
     };
 }

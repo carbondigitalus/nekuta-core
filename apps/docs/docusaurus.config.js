@@ -118,7 +118,7 @@ const config = {
                         items: [
                             {
                                 label: 'GitHub',
-                                href: 'https://github.com/carbondigitalus/veterandb-core',
+                                href: 'https://github.com/carbondigitalus/nekuta',
                             },
                         ],
                     },

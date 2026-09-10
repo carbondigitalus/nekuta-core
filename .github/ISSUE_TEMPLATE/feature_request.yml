@@ -7,7 +7,7 @@ body:
     - type: markdown
       attributes:
           value: |
-              Hi. Thanks for taking the time to contribute to the VeteranDB project!
+              Hi. Thanks for taking the time to contribute to the Nekuta project!
 
     - type: textarea
       id: problem
