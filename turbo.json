@@ -1,0 +1,133 @@
+{
+    "$schema": "https://turborepo.dev/schema.json",
+    "globalDependencies": ["**/.env.*"],
+    "globalPassThroughEnv": ["SENTRY_AUTH_TOKEN", "SENTRY_DSN"],
+    "tasks": {
+        "start:dev": {
+            "cache": false,
+            "env": ["NODE_ENV", "PORT", "SENTRY_AUTH_TOKEN", "SENTRY_DSN"],
+            "inputs": ["$TURBO_DEFAULT$", ".env.development"],
+            "persistent": true
+        },
+        "build": {
+            "dependsOn": ["^build"],
+            "env": ["NODE_ENV", "PORT", "SENTRY_AUTH_TOKEN", "SENTRY_DSN"],
+            "inputs": ["$TURBO_DEFAULT$", ".env.production"],
+            "outputs": ["dist/**"]
+        },
+        "@veterandb/docs#build": {
+            "dependsOn": ["^build"],
+            "outputs": ["build/**"]
+        },
+        "@veterandb/content#build": {
+            "dependsOn": ["^build"],
+            "env": ["NODE_ENV", "PORT", "DATABASE_URI", "PAYLOAD_SECRET"],
+            "outputs": [".next/**", "!.next/cache/**"]
+        },
+        "@veterandb/portal#build": {
+            "dependsOn": ["^build"],
+            "env": [
+                "NODE_ENV",
+                "PORT",
+                "SENTRY_AUTH_TOKEN",
+                "SENTRY_DSN",
+                "NEXT_PUBLIC_PORTAL_URL",
+                "NEXT_PUBLIC_SSO_URL",
+                "NEXT_PUBLIC_API_URL",
+                "NEXT_PUBLIC_EXCHANGE_URL",
+                "REVALIDATE_SECRET",
+                "NEXT_PUBLIC_STORAGE_FILES",
+                "NEXT_PUBLIC_STORAGE_URL_FILES",
+                "NEXT_PUBLIC_STORAGE_URL_UPLOADS",
+                "NEXT_PUBLIC_STORAGE_URL_WIDGET",
+                "NEXT_PUBLIC_ANALYTICS_ID_GA4",
+                "NEXT_PUBLIC_ANALYTICS_ID_FACEBOOK_PIXEL",
+                "NEXT_PUBLIC_ANALYTICS_ID_MICROSOFT_CLARITY",
+                "NEXT_PUBLIC_ANALYTICS_ID_SEGMENT",
+                "NEXT_PUBLIC_EXCHANGE_JWT_SECRET",
+                "NEXT_PUBLIC_EXCHANGE_JWT_USERNAME",
+                "NEXT_PUBLIC_EXCHANGE_JWT_PASSWORD"
+            ],
+            "outputs": [".next/**", "!.next/cache/**"]
+        },
+        "@veterandb/sso#build": {
+            "dependsOn": ["^build"],
+            "env": [
+                "NODE_ENV",
+                "PORT",
+                "SENTRY_AUTH_TOKEN",
+                "SENTRY_DSN",
+                "NEXT_PUBLIC_API_URL",
+                "NEXT_PUBLIC_PORTAL_URL",
+                "NEXT_PUBLIC_STORAGE_URL"
+            ],
+            "outputs": [".next/**", "!.next/cache/**"]
+        },
+        "@veterandb/web#build": {
+            "dependsOn": ["^build"],
+            "env": [
+                "NODE_ENV",
+                "PORT",
+                "SENTRY_AUTH_TOKEN",
+                "SENTRY_DSN",
+                "NEXT_PUBLIC_API_URL",
+                "NEXT_PUBLIC_SSO_URL",
+                "DEPLOY_HOOK",
+                "REVALIDATE_SECRET",
+                "NEXT_PUBLIC_STORAGE_FILES",
+                "NEXT_PUBLIC_STORAGE_UPLOADS",
+                "NEXT_PUBLIC_STORAGE_URL_FILES",
+                "NEXT_PUBLIC_STORAGE_URL_UPLOADS",
+                "NEXT_PUBLIC_STORAGE_URL_WIDGET",
+                "NEXT_PUBLIC_ANALYTICS_ID_GA4",
+                "NEXT_PUBLIC_ANALYTICS_ID_FACEBOOK_PIXEL",
+                "NEXT_PUBLIC_ANALYTICS_ID_MICROSOFT_CLARITY",
+                "NEXT_PUBLIC_ANALYTICS_ID_SEGMENT"
+            ],
+            "outputs": [
+                ".next/**",
+                "!.next/cache/**",
+                "public/robots.txt",
+                "public/sitemap*.xml"
+            ]
+        },
+        "@veterandb/web#build:staging": {
+            "dependsOn": ["^build"],
+            "env": [
+                "NODE_ENV",
+                "PORT",
+                "SENTRY_AUTH_TOKEN",
+                "SENTRY_DSN",
+                "NEXT_PUBLIC_API_URL",
+                "NEXT_PUBLIC_SSO_URL",
+                "DEPLOY_HOOK",
+                "REVALIDATE_SECRET",
+                "NEXT_PUBLIC_STORAGE_FILES",
+                "NEXT_PUBLIC_STORAGE_UPLOADS",
+                "NEXT_PUBLIC_STORAGE_URL_FILES",
+                "NEXT_PUBLIC_STORAGE_URL_UPLOADS",
+                "NEXT_PUBLIC_STORAGE_URL_WIDGET",
+                "NEXT_PUBLIC_ANALYTICS_ID_GA4",
+                "NEXT_PUBLIC_ANALYTICS_ID_FACEBOOK_PIXEL",
+                "NEXT_PUBLIC_ANALYTICS_ID_MICROSOFT_CLARITY",
+                "NEXT_PUBLIC_ANALYTICS_ID_SEGMENT"
+            ],
+            "inputs": ["$TURBO_DEFAULT$", ".env.staging"],
+            "outputs": [
+                ".next/**",
+                "!.next/cache/**",
+                "public/robots.txt",
+                "public/sitemap*.xml"
+            ]
+        },
+        "lint": {},
+        "typecheck": {
+            "dependsOn": ["^build"]
+        },
+        "test:unit": {
+            "dependsOn": [],
+            "outputs": ["coverage/**"]
+        },
+        "test:e2e": {}
+    }
+}
