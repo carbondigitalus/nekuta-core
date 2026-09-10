@@ -24,7 +24,7 @@ const config = {
 
     onBrokenLinks: 'throw',
     markdown: {
-        hooks: { onBrokenMarkdownLinks: 'warn' },
+        hooks: { onBrokenMarkdownLinks: 'warn' }
     },
 
     // Even if you don't use internalization, you can use this field to set useful
@@ -32,7 +32,7 @@ const config = {
     // to replace "en" with "zh-Hans".
     i18n: {
         defaultLocale: 'en',
-        locales: ['en'],
+        locales: ['en']
     },
 
     presets: [
@@ -47,17 +47,18 @@ const config = {
                     sidebarPath: require.resolve('./sidebars.js'),
                     // Please change this to your repo.
                     // Remove this to remove the "edit this page" links.
-                    editUrl: 'https://github.com/carbondigitalus/nekuta/edit/main/apps/docs/',
+                    editUrl:
+                        'https://github.com/jared-leddy/nekuta/edit/main/apps/docs/'
                 },
                 theme: {
-                    customCss: require.resolve('./src/css/style.scss'),
-                },
-            }),
-        ],
+                    customCss: require.resolve('./src/css/style.scss')
+                }
+            })
+        ]
     ],
     plugins: [
         // object is required, even if it's empty
-        ['docusaurus-plugin-sass', {}],
+        ['docusaurus-plugin-sass', {}]
     ],
     themeConfig:
         /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
@@ -69,7 +70,7 @@ const config = {
                 { name: 'og:site_name', content: 'Nekuta' },
                 {
                     name: 'og:description',
-                    content: 'The official docs for our Nekuta store for React.',
+                    content: 'The official docs for our Nekuta store for React.'
                 },
                 { name: 'og:email', content: 'hello@nekuta.org' },
                 { name: 'og:locality', content: 'Charlotte' },
@@ -77,7 +78,7 @@ const config = {
                 { name: 'og:country-name', content: 'USA' },
                 { name: 'twitter:card', content: 'summary_large_image' },
                 { name: 'twitter:site', content: '@NekutaStore' },
-                { name: 'twitter:creator', content: '@NekutaStore' },
+                { name: 'twitter:creator', content: '@NekutaStore' }
             ],
             // Replace with your project's social card
             image: 'img/docusaurus-social-card.jpg',
@@ -85,21 +86,21 @@ const config = {
                 title: 'Nekuta',
                 logo: {
                     alt: 'Nekuta Logo',
-                    src: 'img/logo/icon-light-bg.png',
+                    src: 'img/logo/icon-light-bg.png'
                 },
                 items: [
                     {
                         type: 'doc',
                         docId: 'intro',
                         position: 'left',
-                        label: 'Docs',
+                        label: 'Docs'
                     },
                     {
-                        href: 'https://github.com/carbondigitalus/nekuta',
+                        href: 'https://github.com/jared-leddy/nekuta',
                         label: 'GitHub',
-                        position: 'right',
-                    },
-                ],
+                        position: 'right'
+                    }
+                ]
             },
             footer: {
                 style: 'dark',
@@ -109,27 +110,27 @@ const config = {
                         items: [
                             {
                                 label: 'Website',
-                                to: '/docs/intro',
-                            },
-                        ],
+                                to: '/docs/intro'
+                            }
+                        ]
                     },
                     {
                         title: 'More',
                         items: [
                             {
                                 label: 'GitHub',
-                                href: 'https://github.com/carbondigitalus/nekuta',
-                            },
-                        ],
-                    },
+                                href: 'https://github.com/jared-leddy/nekuta'
+                            }
+                        ]
+                    }
                 ],
-                copyright: `Copyright &copy; 2026-${new Date().getFullYear()} &middot; Nekuta &middot; All Rights Reserved.`,
+                copyright: `Copyright &copy; 2026-${new Date().getFullYear()} &middot; Nekuta &middot; All Rights Reserved.`
             },
             prism: {
                 theme: lightCodeTheme,
-                darkTheme: darkCodeTheme,
-            },
-        }),
+                darkTheme: darkCodeTheme
+            }
+        })
 };
 
 module.exports = config;
