@@ -1,0 +1,52 @@
+{
+    "name": "veterandb-core",
+    "version": "0.42.1",
+    "private": true,
+    "license": "UNLICENSED",
+    "scripts": {
+        "build": "turbo build",
+        "build:api": "npx turbo run build --filter=@veterandb/api",
+        "build:content": "npx turbo run build --filter=@veterandb/content",
+        "build:discord-bot": "npx turbo run build --filter=@veterandb/discord-bot",
+        "build:docs": "npx turbo run build --filter=@veterandb/docs",
+        "build:portal": "npx turbo run build --filter=@veterandb/portal",
+        "build:sso": "npx turbo run build --filter=@veterandb/sso",
+        "build:web": "npx turbo run build --filter=@veterandb/web",
+        "build:web:staging": "npx turbo run build:staging --filter=@veterandb/web",
+        "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+        "lint": "turbo lint",
+        "start:api:prod": "npm run start:prod --workspace=@veterandb/api",
+        "start:content:prod": "npm run start:prod --workspace=@veterandb/content",
+        "start:discord-bot:prod": "npm run start:prod --workspace=@veterandb/discord-bot",
+        "start:portal:prod": "npm run start:prod --workspace=@veterandb/portal",
+        "start:sso:prod": "npm run start:prod --workspace=@veterandb/sso",
+        "start:web:prod": "npm run start:prod --workspace=@veterandb/web",
+        "start:dev": "turbo start:dev --filter=!@veterandb/docs --filter=!@veterandb/discord-bot",
+        "test:e2e": "turbo test:e2e",
+        "test:unit": "turbo test:unit",
+        "typecheck": "turbo typecheck"
+    },
+    "devDependencies": {
+        "prettier": "^3.6.2",
+        "turbo": "^2.10.9"
+    },
+    "packageManager": "npm@11.13.0",
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ],
+    "overrides": {
+        "react": "19.1.1",
+        "react-dom": "19.1.1"
+    },
+    "allowScripts": {
+        "@sentry/cli": true,
+        "argon2": true,
+        "sharp": true,
+        "esbuild": true,
+        "core-js": true,
+        "@heroui/shared-utils": true,
+        "unrs-resolver": true,
+        "@parcel/watcher": true
+    }
+}
