@@ -1,0 +1,45 @@
+:root {
+    color-scheme: light dark;
+    font-family: system-ui, sans-serif;
+}
+
+body {
+    margin: 0 auto;
+    max-width: 720px;
+    padding: 2rem 1.5rem 4rem;
+    line-height: 1.5;
+}
+
+nav a {
+    margin-right: 1rem;
+}
+
+.demo-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.card {
+    border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+ul.log {
+    font-family: ui-monospace, monospace;
+    font-size: 0.85rem;
+    list-style: none;
+    padding: 0;
+}
+
+ul.log li {
+    border-bottom: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+    padding: 0.25rem 0;
+}

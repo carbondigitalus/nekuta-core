@@ -1,3 +1,5 @@
+'use client';
+
 import { useCallback, useRef, useSyncExternalStore } from 'react';
 
 /**
@@ -26,5 +28,9 @@ export function useSubscribeForRerender(
 
     const getSnapshot = useCallback(() => versionRef.current, []);
 
-    useSyncExternalStore(stableSubscribe, getSnapshot);
+    // getServerSnapshot: required whenever this can be part of a server-rendered/statically
+    // generated tree (any Next.js App Router page not explicitly forced dynamic) — without it,
+    // React errors during prerendering. The version counter's fresh-mount value (0) is exactly
+    // the right server snapshot: there's no prior subscription state to diverge from during SSR.
+    useSyncExternalStore(stableSubscribe, getSnapshot, getSnapshot);
 }

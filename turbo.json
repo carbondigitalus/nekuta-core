@@ -19,6 +19,10 @@
             "dependsOn": ["^build"],
             "outputs": ["build/**"]
         },
+        "@nekuta/playground#build": {
+            "dependsOn": ["^build"],
+            "outputs": [".next/**", "!.next/cache/**"]
+        },
         "@nekuta/content#build": {
             "dependsOn": ["^build"],
             "env": ["NODE_ENV", "PORT", "DATABASE_URI", "PAYLOAD_SECRET"],

@@ -1,3 +1,5 @@
+'use client';
+
 import { useCallback, type ComponentProps, type ComponentType } from 'react';
 import type { NekutaInstance, StoreGeneric } from '../store/index.js';
 import { useSubscribeForRerender } from './subscription.js';

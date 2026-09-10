@@ -1,3 +1,5 @@
+'use client';
+
 import { useContext } from 'react';
 import { getActiveNekuta, type Nekuta } from '../store/index.js';
 import { NekutaContext } from './context.js';
