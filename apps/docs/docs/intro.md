@@ -19,8 +19,8 @@ Those are all good libraries, and if you're starting fresh with no Vue backgroun
 
 ## What's supported today
 
-- Both **functional components** (`useStore()`, a hook) and **class components** (`connectStore()`, a HOC) — React 19.
-- **Options-style** stores (`state`/`getters`/`actions`, like Pinia's Options API) and **setup-style** stores (a function returning refs/computed/functions, like Pinia's `<script setup>` style) — the same two flavors, converging on one engine.
+- Both **functional components** (`useStore()`, a hook) and **class components** (`connectStore()`, patches your class in place — no wrapper component) — React 19.
+- **Schema stores** (`state`/`getters`/`actions`, like Pinia's Options API) and **hooks stores** (a function returning refs/computed/functions, like Pinia's `<script setup>` style) — the same two flavors, converging on one engine.
 - `$patch`, `$subscribe`, `$onAction`, `$reset`, `$dispose`, `storeToRefs()`, plugins.
 - SSR/hydration for Next.js, both routers.
 - **Fine-grained re-renders** — a component only re-renders for the specific (deeply-nested, too) properties it actually reads, matching Pinia's DX exactly. See [Reactivity Model](./core-concepts/reactivity-model.md) for how.

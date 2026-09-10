@@ -1,6 +1,6 @@
 'use client';
 
-import { connectStore, useStore, type MappedStoreProps } from '@nekuta/core';
+import { connectStore, useStore, type MappedStores } from '@nekuta/core';
 import { Component } from 'react';
 import { useCounterStore } from '../stores/counterStore';
 
@@ -24,11 +24,13 @@ function CounterFunctional() {
     );
 }
 
-type CounterClassProps = MappedStoreProps<{ counter: typeof useCounterStore }>;
+const counterStoreMap = { counter: useCounterStore };
 
-class CounterClassComponent extends Component<CounterClassProps> {
+class CounterClassComponent extends Component {
+    declare store: MappedStores<typeof counterStoreMap>;
+
     override render() {
-        const { counter } = this.props;
+        const { counter } = this.store;
         return (
             <div className="card">
                 <h3>Class component — connectStore()</h3>
@@ -46,10 +48,7 @@ class CounterClassComponent extends Component<CounterClassProps> {
     }
 }
 
-const ConnectedCounter = connectStore(
-    { counter: useCounterStore },
-    CounterClassComponent
-);
+const ConnectedCounter = connectStore(counterStoreMap, CounterClassComponent);
 
 /** Both bindings share the SAME `counter` store — mutating one updates the other. */
 export function CounterDemo() {

@@ -1,6 +1,6 @@
 import { renderToString } from 'react-dom/server';
 import { createNekuta } from '../store/index.js';
-import { connectStore, type MappedStoreProps } from './connect.js';
+import { connectStore, type MappedStores } from './connect.js';
 import { NekutaStore } from './NekutaStore.js';
 import { defineStore } from '../store/index.js';
 import { useStore } from './useStore.js';
@@ -16,11 +16,11 @@ function FunctionalProbe() {
     return <span>{store.count}</span>;
 }
 
-class ClassProbe extends Component<
-    MappedStoreProps<{ counter: typeof useCounterStore }>
-> {
+class ClassProbe extends Component {
+    declare store: MappedStores<{ counter: typeof useCounterStore }>;
+
     override render() {
-        return <span>{this.props.counter.count}</span>;
+        return <span>{this.store.counter.count}</span>;
     }
 }
 const ConnectedProbe = connectStore({ counter: useCounterStore }, ClassProbe);

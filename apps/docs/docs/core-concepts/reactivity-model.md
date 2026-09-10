@@ -25,7 +25,7 @@ This is the same mechanism `@vue/reactivity` provides for Vue, ported from scrat
 
 ## What this means for `useStore()` and `connectStore()`
 
-Vue's compiler generates a render function that's itself a reactive effect, so a Vue template only re-renders when a property it actually rendered changes — React has no compiler step doing the equivalent for JSX. Nekuta gets the same result a different way: `useStore()` and `connectStore()` return a **tracked proxy**, not the store itself. Reading a property through it — `counter.count` in your JSX, exactly as you'd already write it — records that read against a dependency effect scoped to that component instance, using the same `track()`/`trigger()` machinery described above, not a separate bookkeeping system. A component only re-renders when a property it actually read last render changes; an unrelated property on the same store changing does nothing.
+Vue's compiler generates a render function that's itself a reactive effect, so a Vue template only re-renders when a property it actually rendered changes — React has no compiler step doing the equivalent for JSX. Nekuta gets the same result a different way: `useStore()` returns, and `connectStore()` mounts at `this.store`, a **tracked proxy** — not the store itself. Reading a property through it — `counter.count` in your JSX, exactly as you'd already write it — records that read against a dependency effect scoped to that component instance, using the same `track()`/`trigger()` machinery described above, not a separate bookkeeping system. A component only re-renders when a property it actually read last render changes; an unrelated property on the same store changing does nothing.
 
 ```tsx
 function Counter() {
@@ -36,10 +36,12 @@ function Counter() {
 
 Tracking is deep, not just top-level — `counter.user.name` tracks specifically `name` on the nested `user` object, so a sibling property changing on that same nested object doesn't re-render it either. Tracking is also per-render: which properties count as "read" is recomputed from scratch every render, so a component that conditionally reads different properties (`flag ? a.x : b.y`) correctly tracks whichever branch it actually took last time, the same re-tracking behavior a Vue effect has.
 
-This applies equally to `connectStore()` — mapping a store as a prop that a class component's `render()` never actually reads doesn't cause re-renders for that store either.
+This applies equally to `connectStore()` — mapping a store that a class component's `render()` never actually reads doesn't cause re-renders for that store either.
 
-## The bridge to React: `useSyncExternalStore`
+## The bridge to React
 
-Both `useStore()` and `connectStore()` are built on React's `useSyncExternalStore` under the hood, for the tearing-safety guarantees React's own docs describe for external stores. One detail worth knowing if you're ever reading Nekuta's own source: `useSyncExternalStore` decides whether to re-render by comparing a snapshot value across calls, but a Nekuta store mutates its state **in place** — same object reference before and after a change — so the store itself can't be the snapshot. Nekuta instead tracks a version counter, scoped to each component's own tracked dependencies, that increments only when one of THOSE dependencies changes — a plain number, trivially a "new value" by `Object.is` whenever it matters.
+`useStore()` is built on React's `useSyncExternalStore` under the hood, for the tearing-safety guarantees React's own docs describe for external stores. One detail worth knowing if you're ever reading Nekuta's own source: `useSyncExternalStore` decides whether to re-render by comparing a snapshot value across calls, but a Nekuta store mutates its state **in place** — same object reference before and after a change — so the store itself can't be the snapshot. Nekuta instead tracks a version counter, scoped to each component's own tracked dependencies, that increments only when one of THOSE dependencies changes — a plain number, trivially a "new value" by `Object.is` whenever it matters.
+
+`connectStore()` can't use `useSyncExternalStore` — it's a hook, and class components can't call hooks at all. Instead it uses the plain, pre-hooks class-component primitives that predate `useSyncExternalStore` entirely: a `ReactiveEffect` whose scheduler calls `this.forceUpdate()` directly when a tracked dependency changes, stopped in a wrapped `componentWillUnmount`. Functionally equivalent, just without a hook underneath it.
 
 You don't need to know any of this to use Nekuta day to day — it's purely an implementation detail.

@@ -5,5 +5,5 @@ export { useStore, type UseStoreDefinition } from './useStore.js';
 export {
     connectStore,
     type MapStoresToProps,
-    type MappedStoreProps
+    type MappedStores
 } from './connect.js';
