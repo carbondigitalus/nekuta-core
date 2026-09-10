@@ -1,0 +1,16 @@
+{
+    "extends": "./base.json",
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "declaration": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "incremental": true,
+        "module": "commonjs",
+        "noFallthroughCasesInSwitch": false,
+        "noImplicitAny": false,
+        "sourceMap": true,
+        "strictBindCallApply": false,
+        "strictNullChecks": false
+    }
+}
