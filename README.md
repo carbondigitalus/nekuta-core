@@ -129,12 +129,11 @@ The one real gap plain `tsc` leaves is dev-code stripping: write `diagnostics.ts
 
 Root-level `gulpfile.mjs` (not per-package) — Gulp owns what `turbo.json`'s per-package task model doesn't: git-hook scripting and release sequencing.
 
-- `gulp verifyCommit` — near-verbatim port of `pinia/scripts/verifyCommit.mjs`'s conventional-commit regex check against `.git/COMMIT_EDITMSG`.
 - `gulp lintStaged` — runs eslint/prettier against staged files only, for the pre-commit hook.
 - `gulp release` (composed of `release:version`, `release:changelog`, `release:tag` via `gulp.series`; `release:publish` stays a separate, explicit command) — port of `pinia/scripts/release.ts`, simplified since there are only two publishable packages here (`@nekuta/core`, `@nekuta/next`), each addressed via `--pkg <core|next>`. Each package gets independent versioning/changelog scoped to its own directory and git-tag prefix, using the real `conventional-changelog@8` fluent API (angular preset). **Decision, not a port**: `.github/npm-version-script.js` (the repo's existing beta-version-bump-by-branch-name script) was deliberately NOT reused — it parses a GitHub Actions `ref` string (`refs/heads/beta-x.x.x`) and has no meaning outside a CI job, which conflicts with the "Gulp-only, no CI" constraint. `release:version` instead takes an explicit `--type`/`--preid` and bumps via plain `semver.inc()`, run locally by a human.
 - **No `docs-check.sh` port** — that script exists solely to work around `netlify.toml` not supporting `&&` in build-skip conditions. Netlify is out of scope; Turborepo's own change-detection (`turbo build --filter=...[origin/main]`) already gives equivalent "only rebuild what changed" behavior in CI, natively.
 
-Root `simple-git-hooks` devDependency + config block (`commit-msg` → `gulp verifyCommit`, `pre-commit` → `gulp lintStaged`) + `postinstall: simple-git-hooks` script — added and installed.
+Root `simple-git-hooks` devDependency + config block (`pre-commit` → `gulp lintStaged`) + `postinstall: simple-git-hooks` script — added and installed. `commit-msg` → `gulp verifyCommit` (conventional-commit message enforcement) was removed after the repo moved to a personal account — not needed for a solo/portfolio project.
 
 **No GitHub Actions / Codecov for now.** A `ci.yml` and `codecov.yml` were drafted and then explicitly removed — not part of the plan at this stage. `.github/workflows/release.yml` (`gulp release`, npm publish, tag push) stays deferred to the release-automation-hardening milestone regardless, same as before; whether any CI comes back before then is an open question, not something to reintroduce speculatively.
 
@@ -157,7 +156,7 @@ Recommended IA, adapted from Pinia's own docs structure for React/Next:
 
 ### Sequencing
 
-1. **Scaffolding** — empty `apps/nekuta`, `apps/next` skeletons wired into workspaces/turbo so install+build succeed trivially; add `simple-git-hooks` + `gulp verifyCommit` early so every subsequent commit has a guardrail from day one. (Done — no CI workflow for now, per above.)
+1. **Scaffolding** — empty `apps/nekuta`, `apps/next` skeletons wired into workspaces/turbo so install+build succeed trivially; add `simple-git-hooks` + `gulp verifyCommit` early so every subsequent commit has a guardrail from day one. (Done — no CI workflow for now, per above. `verifyCommit`/the `commit-msg` hook were later removed once the repo moved to a personal account — conventional-commit enforcement wasn't worth keeping for a solo project.)
 2. **Reactivity engine** (`reactivity/`) — built and unit-tested standalone, no store/React coupling yet. Highest risk; do not parallelize with anything else.
 3. **Store engine** (`store/`) — headless, testable via plain Jest against `apps/nekuta` directly, no React involved yet.
 4. **React bindings** (`react/`) — `context.tsx` → `connect.tsx` (class components, built first) → `useStore.ts` v1 (functional components, coarse-grained, reusing the same `$subscribe`-based mechanism). Needs `@testing-library/react` added to `apps/nekuta`'s devDependencies.
