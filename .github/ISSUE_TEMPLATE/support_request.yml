@@ -1,0 +1,75 @@
+name: ❓ Support Request
+description: Get help when you encounter problems, or simply ask a question.
+labels: ['question', 'pending triage']
+title: '[DATE]: [FEATURE NAME]'
+
+body:
+    - type: markdown
+      attributes:
+          value: |
+              Hi. Before you start filling out this form be aware of the following points:
+              - Search through **existing issues** (resolved or open) which might provide a solution to your problem already.
+              - **Ask the community**: We have a Discord and a Facebook Group. Active community members might provide help quicker on those platforms.
+
+    - type: textarea
+      id: problem
+      attributes:
+          label: Current Situation
+          description: Please provide an overview of the current situation and illustrate potential problems or shortcomings.
+          placeholder: A clear and concise description of the problem or situation that should be addressed.
+      validations:
+          required: true
+
+    - type: textarea
+      id: logs
+      attributes:
+          label: Logs
+          description: |
+              Please provide relevant log output.
+              Be sure to **remove any sensitive information** (passwords, tokens, etc.).
+              If you have a lengthy log message, please use the file upload functionality in the `Additional Context` section to supply log files.
+          placeholder: Please paste logging output. Refer to the GitHub Wiki on how to enable `DEBUG` output.
+          render: markdown
+      validations:
+          required: true
+
+    - type: textarea
+      id: config
+      attributes:
+          label: Configuration
+          description: |
+              Please provide, if applicable, the content of your configuration files (e.g. `config.json`).
+              Be sure to **remove any sensitive information** (passwords, tokens, etc.).
+              If you have a lengthy configuration, please use the file upload functionality in the `Additional Context` section to supply config files.
+          placeholder: Please paste configuration ...
+          render: json
+      validations:
+          required: true
+
+    - type: textarea
+      id: environment
+      attributes:
+          label: Environment
+          description: |
+              Describe the environment where you encountered the issue.
+
+              The environment description might look like the following:
+                - **OS**: Ubuntu 22.04
+                - **Node**: 24.16.0 (output of `node -v`)
+                - **npm**: 11.13.0 (output of `npm -v`)
+          value: |
+              - OS:
+              - Node:
+              - npm:
+      validations:
+          required: true
+
+    - type: textarea
+      id: additional-context
+      attributes:
+          label: Additional Context
+          description: |
+              Please provide any additional context that might be relevant for your request.
+
+              It might include screenshots, configuration (files) or log output.
+          placeholder: Any additional context that might be relevant for your request.
