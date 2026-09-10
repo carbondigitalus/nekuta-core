@@ -44,4 +44,4 @@ Redux middleware and Zustand's `persist`/`devtools` wrappers map roughly onto Ne
 
 ## No provider in Zustand, one in Nekuta
 
-Zustand stores are typically module-level singletons with no provider needed. Nekuta stores live on an explicit `Nekuta` instance, and components need a `<NekutaProvider>` above them to find it (see [Quick Start](../getting-started/quick-start.md)) — this is what makes SSR request-isolation possible (see [SSR & Next.js](../ssr/nextjs-pages-router.md)), which a bare module-level singleton can't safely give you on a server handling more than one request.
+Zustand stores are typically module-level singletons with no provider needed. Nekuta stores live on an explicit `Nekuta` instance, and components need a `<NekutaStore>` above them to find it (see [Quick Start](../getting-started/quick-start.md)) — this is what makes SSR request-isolation possible (see [SSR & Next.js](../ssr/nextjs-pages-router.md)), which a bare module-level singleton can't safely give you on a server handling more than one request.

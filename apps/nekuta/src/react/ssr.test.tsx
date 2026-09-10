@@ -1,7 +1,7 @@
 import { renderToString } from 'react-dom/server';
 import { createNekuta } from '../store/index.js';
 import { connectStore, type MappedStoreProps } from './connect.js';
-import { NekutaProvider } from './context.js';
+import { NekutaStore } from './NekutaStore.js';
 import { defineStore } from '../store/index.js';
 import { useStore } from './useStore.js';
 import { Component } from 'react';
@@ -36,9 +36,9 @@ describe('server rendering', () => {
         const nekuta = createNekuta();
         expect(() =>
             renderToString(
-                <NekutaProvider nekuta={nekuta}>
+                <NekutaStore nekuta={nekuta}>
                     <FunctionalProbe />
-                </NekutaProvider>
+                </NekutaStore>
             )
         ).not.toThrow();
     });
@@ -47,9 +47,9 @@ describe('server rendering', () => {
         const nekuta = createNekuta();
         expect(() =>
             renderToString(
-                <NekutaProvider nekuta={nekuta}>
+                <NekutaStore nekuta={nekuta}>
                     <ConnectedProbe />
-                </NekutaProvider>
+                </NekutaStore>
             )
         ).not.toThrow();
     });

@@ -3,7 +3,7 @@
 import {
     createNekuta,
     hydrateNekutaState,
-    NekutaProvider,
+    NekutaStore,
     type Nekuta
 } from '@nekuta/core';
 import { useState, type ReactNode } from 'react';
@@ -39,5 +39,5 @@ export function NekutaAppProvider({
         return instance;
     });
 
-    return <NekutaProvider nekuta={nekuta}>{children}</NekutaProvider>;
+    return <NekutaStore nekuta={nekuta}>{children}</NekutaStore>;
 }

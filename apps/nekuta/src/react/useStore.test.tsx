@@ -4,7 +4,7 @@
 import { act, render, screen } from '@testing-library/react';
 import { createNekuta, defineStore, type Nekuta } from '../store/index.js';
 import { ReactiveEffect } from '../reactivity/index.js';
-import { NekutaProvider } from './context.js';
+import { NekutaStore } from './NekutaStore.js';
 import { useStore } from './useStore.js';
 
 const useCounterStore = defineStore({
@@ -28,7 +28,7 @@ function Counter() {
 }
 
 function renderWithNekuta(nekuta: Nekuta, ui: React.ReactElement) {
-    return render(<NekutaProvider nekuta={nekuta}>{ui}</NekutaProvider>);
+    return render(<NekutaStore nekuta={nekuta}>{ui}</NekutaStore>);
 }
 
 describe('useStore()', () => {
@@ -58,13 +58,13 @@ describe('useStore()', () => {
         expect(screen.getByTestId('count')).toHaveTextContent('42');
     });
 
-    it('two components under the same Provider share and both reflect store state', () => {
+    it('two components under the same NekutaStore share and both reflect store state', () => {
         const nekuta = createNekuta();
         render(
-            <NekutaProvider nekuta={nekuta}>
+            <NekutaStore nekuta={nekuta}>
                 <Counter />
                 <Counter />
-            </NekutaProvider>
+            </NekutaStore>
         );
 
         act(() => {

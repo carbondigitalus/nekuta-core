@@ -1,13 +1,13 @@
-import { createNekuta, NekutaProvider } from '@nekuta/core';
+import { createNekuta, NekutaStore } from '@nekuta/core';
 import { act, render, screen } from '@testing-library/react';
 import { CounterDemo } from './CounterDemo';
 
 function renderDemo() {
     const nekuta = createNekuta();
     return render(
-        <NekutaProvider nekuta={nekuta}>
+        <NekutaStore nekuta={nekuta}>
             <CounterDemo />
-        </NekutaProvider>
+        </NekutaStore>
     );
 }
 

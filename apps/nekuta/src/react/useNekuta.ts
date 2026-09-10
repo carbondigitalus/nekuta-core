@@ -5,7 +5,7 @@ import { getActiveNekuta, type Nekuta } from '../store/index.js';
 import { NekutaContext } from './context.js';
 
 /**
- * Resolves the active Nekuta instance: a `<NekutaProvider>` above in the tree first, falling back
+ * Resolves the active Nekuta instance: a `<NekutaStore>` above in the tree first, falling back
  * to the module-level singleton (`setActiveNekuta()`) — the same fallback the headless store
  * engine itself uses outside of React (see store/rootInstance.ts).
  */
@@ -15,7 +15,7 @@ export function useNekuta(): Nekuta {
 
     if (!nekuta) {
         throw new Error(
-            'nekuta: no <NekutaProvider> found in the component tree, and no active Nekuta instance is set. Wrap your app in <NekutaProvider nekuta={...}> (or call setActiveNekuta() before rendering).'
+            'nekuta: no <NekutaStore> found in the component tree, and no active Nekuta instance is set. Wrap your app in <NekutaStore> (or call setActiveNekuta() before rendering).'
         );
     }
 

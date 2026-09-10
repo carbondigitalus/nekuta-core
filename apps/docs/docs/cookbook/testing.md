@@ -30,19 +30,19 @@ Creating a fresh `Nekuta` instance per test gives full isolation for free — no
 
 ## Testing a component that uses a store
 
-Wrap it in a real `<NekutaProvider>`, same as your app does, and use `@testing-library/react`:
+Wrap it in a real `<NekutaStore>`, same as your app does, and use `@testing-library/react`:
 
 ```tsx
-import { createNekuta, NekutaProvider } from '@nekuta/core';
+import { createNekuta, NekutaStore } from '@nekuta/core';
 import { render, screen, act } from '@testing-library/react';
 import { Counter } from './Counter';
 
 function renderCounter() {
     const nekuta = createNekuta();
     return render(
-        <NekutaProvider nekuta={nekuta}>
+        <NekutaStore nekuta={nekuta}>
             <Counter />
-        </NekutaProvider>
+        </NekutaStore>
     );
 }
 

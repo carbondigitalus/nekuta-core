@@ -3,7 +3,7 @@
  */
 import { render, screen } from '@testing-library/react';
 import { createNekuta, setActiveNekuta, type Nekuta } from '../store/index.js';
-import { NekutaProvider } from './context.js';
+import { NekutaStore } from './NekutaStore.js';
 import { useNekuta } from './useNekuta.js';
 
 function Probe() {
@@ -16,18 +16,18 @@ describe('useNekuta()', () => {
         setActiveNekuta(undefined);
     });
 
-    it('resolves the instance from a <NekutaProvider> above it', () => {
+    it('resolves the instance from a <NekutaStore> above it', () => {
         const nekuta = createNekuta();
         render(
-            <NekutaProvider nekuta={nekuta}>
+            <NekutaStore nekuta={nekuta}>
                 <Probe />
-            </NekutaProvider>
+            </NekutaStore>
         );
 
         expect(screen.getByTestId('probe')).toHaveTextContent('resolved');
     });
 
-    it('falls back to the active singleton when there is no Provider', () => {
+    it('falls back to the active singleton when there is no NekutaStore', () => {
         const nekuta: Nekuta = createNekuta();
         setActiveNekuta(nekuta);
 
@@ -36,18 +36,18 @@ describe('useNekuta()', () => {
         expect(screen.getByTestId('probe')).toHaveTextContent('resolved');
     });
 
-    it('throws when neither a Provider nor an active instance is present', () => {
+    it('throws when neither a NekutaStore nor an active instance is present', () => {
         const consoleError = jest
             .spyOn(console, 'error')
             .mockImplementation(() => {});
 
-        expect(() => render(<Probe />)).toThrow(/no <NekutaProvider>/);
+        expect(() => render(<Probe />)).toThrow(/no <NekutaStore>/);
 
         consoleError.mockRestore();
     });
 
-    it('prefers the Provider over the singleton when both are present', () => {
-        const providerNekuta = createNekuta();
+    it('prefers the NekutaStore instance over the singleton when both are present', () => {
+        const providedNekuta = createNekuta();
         const singletonNekuta = createNekuta();
         setActiveNekuta(singletonNekuta);
 
@@ -58,12 +58,12 @@ describe('useNekuta()', () => {
         }
 
         render(
-            <NekutaProvider nekuta={providerNekuta}>
+            <NekutaStore nekuta={providedNekuta}>
                 <CaptureProbe />
-            </NekutaProvider>
+            </NekutaStore>
         );
 
-        expect(seen).toBe(providerNekuta);
+        expect(seen).toBe(providedNekuta);
         expect(seen).not.toBe(singletonNekuta);
     });
 });

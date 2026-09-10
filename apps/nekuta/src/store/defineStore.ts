@@ -315,7 +315,7 @@ export function defineStore(
         const activeNekuta = nekuta ?? getActiveNekuta();
         if (!activeNekuta) {
             throw new Error(
-                `nekuta: no active Nekuta instance found. Call setActiveNekuta() (or, in React, render a <NekutaProvider>) before calling "${id}"'s store accessor.`
+                `nekuta: no active Nekuta instance found. Call setActiveNekuta() (or, in React, render a <NekutaStore>) before calling "${id}"'s store accessor.`
             );
         }
 

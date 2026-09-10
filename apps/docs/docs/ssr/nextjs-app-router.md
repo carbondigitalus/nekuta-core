@@ -39,7 +39,7 @@ export default function RootLayout({
 
 `getServerNekuta()` is wrapped in React's `cache()`, which memoizes it **per request** when called from Server Component code — the RSC-era equivalent of Nuxt's server plugin creating one Pinia instance per request. It only behaves this way inside an actual Server Component render; calling it from a plain test or script just creates a fresh instance every time.
 
-`<NekutaClientProvider>` is a `"use client"` boundary — since nothing above it in the tree can hold React state (Server Components can't), this component _is_ the actual `<NekutaProvider>` for everything rendered below it. It hydrates from the `state` prop once, the same one-time-only rule described in [Pages Router](./nextjs-pages-router.md#hydration-is-one-time-not-per-navigation).
+`<NekutaClientProvider>` is a `"use client"` boundary — since nothing above it in the tree can hold React state (Server Components can't), this component _is_ the actual `<NekutaStore>` for everything rendered below it. It hydrates from the `state` prop once, the same one-time-only rule described in [Pages Router](./nextjs-pages-router.md#hydration-is-one-time-not-per-navigation).
 
 ## A Client Component below it
 

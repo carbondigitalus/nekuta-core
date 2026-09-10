@@ -9,7 +9,7 @@ import {
     type Nekuta,
     type Store
 } from '../store/index.js';
-import { NekutaProvider } from './context.js';
+import { NekutaStore } from './NekutaStore.js';
 import { connectStore, type MappedStoreProps } from './connect.js';
 
 const useCounterStore = defineStore({
@@ -56,7 +56,7 @@ const ConnectedCounter = connectStore(
 );
 
 function renderWithNekuta(nekuta: Nekuta, ui: React.ReactElement) {
-    return render(<NekutaProvider nekuta={nekuta}>{ui}</NekutaProvider>);
+    return render(<NekutaStore nekuta={nekuta}>{ui}</NekutaStore>);
 }
 
 describe('connectStore()', () => {

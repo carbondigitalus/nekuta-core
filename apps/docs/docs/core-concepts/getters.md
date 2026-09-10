@@ -61,7 +61,7 @@ getters: {
 }
 ```
 
-This works when there's an active `Nekuta` instance to resolve `useOtherStore()` against — inside a component tree wrapped in `<NekutaProvider>`, or anywhere `setActiveNekuta()` has been called. It's **not reliable during Next.js App Router server rendering**: the module-level "active instance" a bare `useOtherStore()` call resolves against doesn't survive React's async streaming render the way a single synchronous call (like a Pages Router `getServerSideProps` call) does. If a getter like this needs to work during App Router SSR, combine the two stores at the **component** level instead — call `useStore()` for each and combine the results in your component, rather than inside the getter:
+This works when there's an active `Nekuta` instance to resolve `useOtherStore()` against — inside a component tree wrapped in `<NekutaStore>`, or anywhere `setActiveNekuta()` has been called. It's **not reliable during Next.js App Router server rendering**: the module-level "active instance" a bare `useOtherStore()` call resolves against doesn't survive React's async streaming render the way a single synchronous call (like a Pages Router `getServerSideProps` call) does. If a getter like this needs to work during App Router SSR, combine the two stores at the **component** level instead — call `useStore()` for each and combine the results in your component, rather than inside the getter:
 
 ```tsx
 function Combined() {

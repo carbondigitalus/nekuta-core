@@ -21,7 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
 }
 ```
 
-`NekutaAppProvider` creates one `Nekuta` instance for the client's entire session (on first mount) and hydrates it from `pageProps.__NEKUTA_STATE__` if a page's `getServerSideProps` set one. It renders a [`<NekutaProvider>`](../api/nekuta-provider.md) internally — you don't add one yourself in a Pages Router app.
+`NekutaAppProvider` creates one `Nekuta` instance for the client's entire session (on first mount) and hydrates it from `pageProps.__NEKUTA_STATE__` if a page's `getServerSideProps` set one. It renders a [`<NekutaStore>`](../api/nekuta-store.md) internally — you don't add one yourself in a Pages Router app.
 
 ## A page
 

@@ -9,7 +9,7 @@ If you already know Pinia, most of this is a rename exercise. The table below is
 | Pinia (Vue)                                      | Nekuta (React)                                                      |
 | ------------------------------------------------ | ------------------------------------------------------------------- |
 | `createPinia()`                                  | `createNekuta()`                                                    |
-| `app.use(pinia)`                                 | `<NekutaProvider nekuta={nekuta}>`                                  |
+| `app.use(pinia)`                                 | `<NekutaStore>`                                                     |
 | `defineStore(...)`                               | `defineStore(...)` — same two styles (options/setup)                |
 | `const store = useCounterStore()` (in `setup()`) | `const store = useStore(useCounterStore)` (in a function component) |
 | Options API: `mapStores`/`mapState`/`mapActions` | `connectStore({ counter: useCounterStore }, Component)`             |

@@ -6,20 +6,18 @@ sidebar_position: 2
 
 This page builds a counter store and reads it from a functional component. For class components, see [Class Components](./class-components.md).
 
-## 1. Create a Nekuta instance and provide it
+## 1. Wrap your app in `<NekutaStore>`
 
-Every store lives on a `Nekuta` instance — the equivalent of a Pinia instance. Create one near the root of your app and make it available via `<NekutaProvider>`:
+Every store lives on a `Nekuta` instance — the equivalent of a Pinia instance. `<NekutaStore>` creates one and makes it available to everything below it, in one step:
 
 ```tsx title="App.tsx"
-import { createNekuta, NekutaProvider } from '@nekuta/core';
-
-const nekuta = createNekuta();
+import { NekutaStore } from '@nekuta/core';
 
 export function App() {
     return (
-        <NekutaProvider nekuta={nekuta}>
+        <NekutaStore>
             <Counter />
-        </NekutaProvider>
+        </NekutaStore>
     );
 }
 ```
