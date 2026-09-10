@@ -1,0 +1,17 @@
+{
+    "name": "@nekuta/prettier-config",
+    "version": "0.0.0",
+    "type": "module",
+    "private": true,
+    "main": "base.js",
+    "types": "./base.d.ts",
+    "exports": {
+        ".": {
+            "types": "./base.d.ts",
+            "default": "./base.js"
+        }
+    },
+    "devDependencies": {
+        "prettier": "^3.6.2"
+    }
+}
