@@ -8,7 +8,14 @@ export interface Ref<T = unknown> {
     value: T;
 }
 
-const refSymbol = Symbol('nekuta:ref');
+/**
+ * Exported (not module-private) so computed.ts can mark ComputedRefImpl with it too — a computed
+ * IS a ref, same as in real Vue. Without this, reading a computed through a `reactive()` object
+ * falls past the ref-unwrap branch in baseHandlers' `get` trap into the plain-object branch,
+ * which wraps the ComputedRefImpl instance itself in a fresh reactive proxy — corrupting its
+ * internal effect/dep bookkeeping and blowing up into runaway recursive wrapping.
+ */
+export const refSymbol = Symbol('nekuta:ref');
 
 function toReactive<T>(value: T): T {
     return isObject(value) ? (reactive(value as object) as T) : value;

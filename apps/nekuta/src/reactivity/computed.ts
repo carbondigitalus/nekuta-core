@@ -2,7 +2,7 @@ import { createDep, type Dep } from './dep';
 import { ReactiveEffect, trackEffects, triggerEffects } from './effect';
 import { TriggerOpTypes } from './operations';
 import { isFunction } from './shared';
-import type { RefLike } from './ref';
+import { refSymbol, type RefLike } from './ref';
 
 export interface ComputedRef<T = unknown> {
     readonly value: T;
@@ -23,6 +23,8 @@ class ComputedRefImpl<T> implements RefLike {
     public readonly dep: Dep = createDep();
     public readonly effect: ReactiveEffect<T>;
     public readonly [computedSymbol] = true;
+    /** A computed IS a ref — see the note on `refSymbol` in ref.ts. */
+    public readonly [refSymbol] = true;
 
     private _value!: T;
     private _dirty = true;

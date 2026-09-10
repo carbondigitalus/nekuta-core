@@ -2,6 +2,7 @@ import { ITERATE_KEY } from './dep';
 import { track, trigger } from './effect';
 import { TrackOpTypes, TriggerOpTypes } from './operations';
 import { ReactiveFlags, reactive, toRaw } from './reactive';
+import { isRef } from './ref';
 import {
     hasChanged,
     hasOwn,
@@ -98,6 +99,14 @@ export const mutableHandlers: ProxyHandler<object> = {
             track(target, TrackOpTypes.GET, key);
         }
 
+        // A ref stored as a plain object property auto-unwraps to its `.value` (Vue's own
+        // behavior) — arrays are the one exception, so `list[0]` still returns the ref itself.
+        if (isRef(res)) {
+            return targetIsArray && isIntegerKey(key as string)
+                ? res
+                : res.value;
+        }
+
         if (isObject(res)) {
             return reactive(res);
         }
@@ -110,6 +119,11 @@ export const mutableHandlers: ProxyHandler<object> = {
             key as string
         ];
         const rawValue = toRaw(value);
+
+        if (!isArray(target) && isRef(oldValue) && !isRef(rawValue)) {
+            oldValue.value = rawValue;
+            return true;
+        }
 
         const hadKey =
             isArray(target) && isIntegerKey(key)

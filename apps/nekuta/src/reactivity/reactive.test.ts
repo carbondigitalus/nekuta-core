@@ -1,5 +1,6 @@
 import { effect } from './effect';
 import { isReactive, markRaw, reactive, toRaw } from './reactive';
+import { isRef, ref } from './ref';
 
 describe('reactive()', () => {
     it('returns the same proxy for the same target (identity stability)', () => {
@@ -74,6 +75,29 @@ describe('reactive()', () => {
         state.count = 0;
 
         expect(fn).toHaveBeenCalledTimes(1);
+    });
+
+    describe('ref unwrapping', () => {
+        it('auto-unwraps a ref stored as a plain object property', () => {
+            const state = reactive({ count: ref(0) });
+            expect(state.count).toBe(0);
+
+            state.count = 5;
+            expect(state.count).toBe(5);
+        });
+
+        it('setting a ref-backed property updates the underlying ref rather than replacing it', () => {
+            const count = ref(0);
+            const state = reactive({ count });
+
+            state.count = 5;
+            expect(count.value).toBe(5);
+        });
+
+        it('does NOT auto-unwrap a ref stored as an array element', () => {
+            const list = reactive([ref(0)]);
+            expect(isRef(list[0])).toBe(true);
+        });
     });
 
     describe('arrays', () => {
