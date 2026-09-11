@@ -6,27 +6,7 @@ Nekuta (ネクター), "nectar" in Japanese, is a React store ecosystem that is 
 
 I realize that Pinia currently integrates with the Vue DevTools browser extension. So, we will probably end up building our own React browser extension to match Vue's amazing extension. Just so that we can use this package in the DevTools.
 
-## Nekuta — React port of Pinia (build plan)
-
-### Context
-
-`nekuta-core` (this TurboRepo) already declares its intent in its own README: build "a React store ecosystem based on Vue's Pinia store," with parity for both functional and class components, no DevTools extension yet (planned as a separate future repo). Today the repo is a mostly-empty scaffold: `turbo.json` anticipates four Next.js apps (`content`, `portal`, `sso`, `web`) that don't exist yet, only `apps/docs` (Docusaurus, essentially unstarted content) is real, and `packages/` holds only internal tooling (`eslint-config`, `prettier-config`, `typescript-config`, `jest-config`) plus one real library, `@nekuta/utils`, built with plain `tsc -b`. There is no CI, no git hooks, no bundler anywhere in the repo.
-
-This plan designs the Nekuta store engine and its supporting packages from scratch, porting Pinia's architecture (studied directly from the vendored reference at `nekuta-core/pinia/`) onto React 19, inside this monorepo's existing npm/turbo/eslint/prettier/jest conventions, per the user's explicit constraints:
-
-- No Netlify, no oxfmt/`.oxfmtrc` (use the repo's existing `@nekuta/eslint-config` + `@nekuta/prettier-config`).
-- Codecov wired through Jest coverage, not Vitest.
-- npm workspaces (already the repo's setup), not pnpm.
-- Gulpfiles replace Pinia's `scripts/` folder for release/commit-verification automation.
-- Next.js support via **one combined adapter package** for now, covering both Pages Router and App Router — not Nuxt. A split into `@nekuta/next-pages`/`@nekuta/next-app` is still the eventual goal (likely within the adapter's first year), but isn't worth the overhead until the combined package's shared logic actually diverges.
-- React 19, both class and functional components. **Class components ship first**; hooks build on top of the same mechanism (confirmed below).
-- Custom Proxy-based reactivity engine (Vue-`@vue/reactivity`-style), not a Zustand-style manual-selector store — chosen so getters auto-memoize on real dependency changes, matching Pinia's DX.
-- The core engine and its Next.js adapter are **apps**, not packages — "the apps are the product; packages are support elements of the apps." `packages/` stays limited to shared tooling (`eslint-config`, `prettier-config`, `typescript-config`, `jest-config`, `utils`).
-- The core package is a real publishable open-source package (like `pinia` itself), not internal-only — published as `@nekuta/core`, matching this monorepo's existing `@nekuta/*` scoping convention (the npm registry confirmed unscoped `nekuta` was actually available too, but `@nekuta/core` is the chosen name).
-- Scope: core engine + one Next.js adapter + **one** publicly-deployed playground app + the existing docs app. No dedicated testing package (each app tests itself with Jest) and no dedicated size-check package (folded into the core package).
-- `apps/content`, `apps/portal`, `apps/sso`, `apps/web` referenced in `turbo.json`/`.gitignore` are leftovers from the Turborepo starter this repo was cloned from — disregard them; they'll be updated separately as that work happens, unrelated to Nekuta.
-
-### Package / App Layout
+## Package / App Layout
 
 ```
 nekuta-core/
@@ -46,7 +26,7 @@ nekuta-core/
 - New `turbo.json` task overrides needed: `@nekuta/playground#build` (`.next/**` outputs, same shape as the existing per-app override pattern). `@nekuta/core` and `@nekuta/next` are plain TS libraries (not Next runtime apps themselves) — they're covered by the existing generic `build` task (`dist/**` output, `dependsOn: ["^build"]`) with no override needed, same as any `packages/*` library would be; their location under `apps/` is an organizational choice, not a turbo task-graph one.
 - `apps/eslint-plugin` (`@nekuta/eslint-plugin`, added post-Milestone-10): a real publishable package, same "apps are the product" reasoning as `@nekuta/core`/`@nekuta/next` — any Nekuta consumer can install it, not just this monorepo's own apps. Plain TS library covered by the generic `build` task, no override needed. Peer-depends on `eslint@^9`. Ships one rule, `define-store-format`, that optionally enforces a single `defineStore()` call style (`'schema'` or `'hooks'`) project-wide — deliberately a lint rule, not a `<NekutaStore>` prop, since `defineStore()` calls run at module-evaluation time, before any `<NekutaStore>` ever renders; a runtime prop can't retroactively enforce a decision already made at import time. Documented in `apps/docs/docs/cookbook/enforcing-a-store-style.md`.
 
-### Core package (`apps/nekuta`, published as `@nekuta/core`) — module breakdown
+## Core package (`apps/nekuta`, published as `@nekuta/core`) — module breakdown
 
 ```
 src/
@@ -105,7 +85,7 @@ src/
 
 Porting source of truth: `nekuta-core/pinia/packages/pinia/src/store.ts` (1007 lines — the store engine), `rootStore.ts`, `subscriptions.ts`, `hmr.ts`, `mapHelpers.ts`. Recommend porting a subset of Vue's own `@vue/reactivity` unit tests (MIT-licensed) as a correctness baseline for the reactivity engine, since they already exercise the hard edge cases (nested reactives, array mutation, Map/Set proxying, computed dirty-chains).
 
-### Next.js adapter (`apps/next`, published as `@nekuta/next`)
+## Next.js adapter (`apps/next`, published as `@nekuta/next`)
 
 One package for now, depending on `@nekuta/core`, supporting both routers as plain named exports from `@nekuta/next` rather than two separate packages — no subpath exports (`@nekuta/next/pages` / `@nekuta/next/app`) unless a concrete need (bundling, tree-shaking, keeping server-only code out of a client bundle) actually forces it later; simplicity over anticipatory structure. Internally the router-specific code still lives in its own directory (`src/pages/`, `src/app/`), so a future split into `@nekuta/next-pages`/`@nekuta/next-app` — or, short of that, introducing the subpath exports — is mostly a matter of moving/exposing an existing directory, not an architectural rewrite. Both sides consume the same `ssr/serialize.ts` + `skipHydrate.ts` helpers living in core — the adapter only handles _transport_ of the serialized state blob for each router, mirroring how `@pinia/nuxt`'s payload-plugin only wires Nuxt's payload reducer/reviver around logic that already lives in Pinia core. (Per your note: expect to fork this shared logic apart once the two packages actually split — no action needed now, just keeping the seam visible so that split is easy later — e.g. keep `serialize.ts`/`skipHydrate.ts` as a self-contained module within core rather than letting router-specific assumptions leak into it.)
 
@@ -115,7 +95,7 @@ One package for now, depending on `@nekuta/core`, supporting both routers as pla
 
 Porting source of truth: `nekuta-core/pinia/packages/nuxt/src/module.ts` and `runtime/payload-plugin.ts`.
 
-### Build tooling & size check
+## Build tooling & size check
 
 **Plain `tsc -b`**, matching `@nekuta/utils`'s existing convention — no bundler introduced. Pinia's 5-target `tsdown` build (including IIFE/CDN globals) exists to support `<script>`-tag/CDN consumption, a legacy-Vue-ecosystem concern with no React equivalent (React apps are always bundled) — drop those targets entirely rather than port them.
 
@@ -125,7 +105,7 @@ The one real gap plain `tsc` leaves is dev-code stripping: write `diagnostics.ts
 
 **Size budget**, folded into `apps/nekuta` itself (no dedicated package): a small `scripts/check-size.mjs` gzips the built `dist/index.js` via Node's `zlib` and compares against a budget field in `package.json`, run as its own CI step after `build` (not embedded in the build script) so a regression is clearly attributed. Label it honestly as an "unminified ESM output, gzip size" budget, since there's no bundler doing minification here — not directly comparable to Pinia's minified-IIFE numbers.
 
-### Gulpfile + CI / release automation
+## Gulpfile + CI / release automation
 
 Root-level `gulpfile.mjs` (not per-package) — Gulp owns what `turbo.json`'s per-package task model doesn't: git-hook scripting and release sequencing.
 
@@ -137,11 +117,11 @@ Root `simple-git-hooks` devDependency + config block (`pre-commit` → `gulp lin
 
 **No GitHub Actions / Codecov for now.** A `ci.yml` and `codecov.yml` were drafted and then explicitly removed — not part of the plan at this stage. `.github/workflows/release.yml` (`gulp release`, npm publish, tag push) stays deferred to the release-automation-hardening milestone regardless, same as before; whether any CI comes back before then is an open question, not something to reintroduce speculatively.
 
-### Playground app (`apps/playground`, `@nekuta/playground`)
+## Playground app (`apps/playground`, `@nekuta/playground`)
 
 One Next.js app (not two, per your answer) that dogfoods both routers side by side — Next.js supports Pages and App Router coexisting in the same project, e.g. `/pages-demo/*` and `/app-demo/*`, both importing from the same `@nekuta/next` package. Demo content: counter/todo store exercising `$patch`/`$subscribe`/`$onAction`/cross-store getters, shown via both a class (`connectStore`, built first) and a functional (`useStore`) component, since both are required. Deployed publicly — Vercel is the natural fit for a Next.js app and isn't excluded by any stated constraint, but flagging that as worth an explicit nod from you before we act on it, since only Netlify was ruled out and Vercel specifically wasn't discussed.
 
-### Docs app (`apps/docs`)
+## Docs app (`apps/docs`)
 
 Confirmed: `docs/` source content is just a placeholder `intro.md` and an empty `uploads` category — genuinely unstarted, as you described. (Its `build/` output directory does contain stale pages like `veteran-verification`/`listings` from a prior/different project's build cache — that's a git-ignored build artifact, not source content, and will simply be overwritten by the next real build; not something to clean up by hand.)
 
@@ -154,7 +134,7 @@ Recommended IA, adapted from Pinia's own docs structure for React/Next:
 
 - `api/` — reference documentation for `@nekuta/core`'s public TypeScript exports (`defineStore`, `useStore`, `connectStore`, `Store` type, etc.) — the same role as Pinia's own "API Documentation" section on its docs site. To be clear on scope: this is _not_ a REST/backend API — there isn't one, and doesn't need to be one — it's a reference for the functions/types consumers of the `nekuta` package import. Since nothing is built yet, there's nothing to document yet; the recommendation is simply to hand-write this section's pages as each export ships (rather than reaching for TypeDoc auto-generation from day one, which would mean regenerating against a still-churning API every commit). Revisit auto-generation once the public surface stabilizes after the first release.
 
-### Sequencing
+## Sequencing
 
 1. **Scaffolding** — empty `apps/nekuta`, `apps/next` skeletons wired into workspaces/turbo so install+build succeed trivially; add `simple-git-hooks` + `gulp verifyCommit` early so every subsequent commit has a guardrail from day one. (Done — no CI workflow for now, per above. `verifyCommit`/the `commit-msg` hook were later removed once the repo moved to a personal account — conventional-commit enforcement wasn't worth keeping for a solo project.)
 2. **Reactivity engine** (`reactivity/`) — built and unit-tested standalone, no store/React coupling yet. Highest risk; do not parallelize with anything else.
@@ -167,7 +147,7 @@ Recommended IA, adapted from Pinia's own docs structure for React/Next:
 9. **Fine-grained `useStore`/`connectStore` optimization** (done) — both bindings now return a tracked proxy (deep, not just top-level) built on the reactivity engine's own `track()`/`trigger()`, instead of the coarse `$subscribe`-based approach described in step 4 above. Turned out `getSnapshot` itself can't carry the tracking-reset side effect it was originally sketched with — React's contract allows calling it more than once per render, which silently wiped out the current render's just-collected dependencies; the reset now happens once in the hook body itself instead. Also fixed a latent gap surfaced along the way: a stopped `ReactiveEffect` could still be re-added to a dependency set and have its scheduler fire — `trackEffects()`/`triggerEffects()` now both check `.active`.
 10. **Release automation hardening** (done, Gulp-only — no CI/GitHub Actions/Codecov) — root `gulpfile.mjs` gained a full per-package release pipeline: `release:version` (semver bump via `--pkg <core|next> --type <bump> [--preid]`), `release:changelog` (real `conventional-changelog@8`'s fluent `ConventionalChangelog` class, angular preset, commits/tags scoped to the package's own directory and tag prefix, prepended to that package's `CHANGELOG.md`), `release:tag` (local-only annotated git tag, never pushed), and `release:publish` (`npm publish`, dry-run by default, `--live` to actually execute). The combined `release` task is a `gulp.series(releaseVersion, releaseChangelog, releaseTag)` that deliberately excludes `release:publish` — publishing is the one step with an irreversible external side effect, so it always stays a separate, explicit command. Verified end-to-end against `apps/nekuta` (real version bump, real changelog generated from actual commit history, reverted after) and caught a real bug along the way: npm refuses to publish a prerelease version without an explicit dist-tag, since it would otherwise become `latest` — `release:publish` now defaults to tag `next` for prereleases and `latest` for stable versions (via `semver.prerelease()`), overridable with `--tag`.
 
-### Verification
+## Verification
 
 - Reactivity engine and store engine: headless Jest suites in `apps/nekuta` (via `@nekuta/jest-config`'s `node` preset), including the ported `@vue/reactivity` edge-case tests.
 - React bindings: `@testing-library/react` tests in `apps/nekuta` covering mount/unmount subscription lifecycle and shallow-compare re-render behavior for `connectStore`, then the same for `useStore`.
@@ -175,7 +155,7 @@ Recommended IA, adapted from Pinia's own docs structure for React/Next:
 - End-to-end: the playground app, run locally (`npm run start:dev`) and clicked through in a browser for both `/pages-demo` and `/app-demo` routes, class- and functional-component demos, before considering step 6/7 done.
 - Run `turbo lint && turbo typecheck && turbo test:unit && turbo build` locally and confirm all green before merging — there's no CI pipeline enforcing this automatically right now.
 
-### Pre-Publish Checklist
+## Pre-Publish Checklist
 
 Before running `gulp release:publish --pkg <alias> --live` for the first real public release of any package (`@nekuta/core`, `@nekuta/next`, `@nekuta/eslint-plugin`), confirm all of the following:
 
