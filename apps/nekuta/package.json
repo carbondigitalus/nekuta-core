@@ -1,6 +1,6 @@
 {
     "name": "@nekuta/core",
-    "version": "0.1.0-alpha.0",
+    "version": "0.1.0",
     "private": false,
     "license": "MIT",
     "description": "A React store ecosystem based on Vue's Pinia store.",
