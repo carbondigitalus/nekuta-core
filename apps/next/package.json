@@ -1,6 +1,6 @@
 {
     "name": "@nekuta/next",
-    "version": "0.1.0-alpha.0",
+    "version": "0.1.0",
     "private": false,
     "license": "MIT",
     "description": "Next.js adapter for Nekuta — SSR/hydration support for the Pages Router and App Router.",
