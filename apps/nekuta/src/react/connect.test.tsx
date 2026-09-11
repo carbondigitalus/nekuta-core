@@ -337,4 +337,68 @@ describe('connectStore()', () => {
             );
         });
     });
+
+    it('warns in development when overwriting an existing contextType', () => {
+        const consoleError = jest
+            .spyOn(console, 'error')
+            .mockImplementation(() => {});
+        const OtherContext = { $$typeof: Symbol.for('react.context') };
+
+        class Counter extends Component {
+            static contextType = OtherContext as never;
+            declare store: MappedStores<{ counter: typeof useCounterStore }>;
+            override render() {
+                return null;
+            }
+        }
+        connectStore({ counter: useCounterStore }, Counter);
+
+        expect(consoleError).toHaveBeenCalledWith(
+            expect.stringContaining('overwriting a contextType it already had')
+        );
+
+        consoleError.mockRestore();
+    });
+
+    it('warns in development when overwriting an existing "store" property', () => {
+        const consoleError = jest
+            .spyOn(console, 'error')
+            .mockImplementation(() => {});
+
+        class Counter extends Component {
+            get store() {
+                return {};
+            }
+            override render() {
+                return null;
+            }
+        }
+        connectStore({ counter: useCounterStore }, Counter);
+
+        expect(consoleError).toHaveBeenCalledWith(
+            expect.stringContaining('already defines its own "store"')
+        );
+
+        consoleError.mockRestore();
+    });
+
+    it('throws from the store getter when no Nekuta instance is active', () => {
+        class Counter extends Component {
+            declare store: MappedStores<{ counter: typeof useCounterStore }>;
+            override render() {
+                return <span>{this.store.counter.count}</span>;
+            }
+        }
+        const Connected = connectStore({ counter: useCounterStore }, Counter);
+
+        const consoleError = jest
+            .spyOn(console, 'error')
+            .mockImplementation(() => {});
+
+        expect(() => render(<Connected />)).toThrow(
+            /no active Nekuta instance found for a connectStore\(\)-connected component/
+        );
+
+        consoleError.mockRestore();
+    });
 });
