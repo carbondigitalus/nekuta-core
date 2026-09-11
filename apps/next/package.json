@@ -4,6 +4,9 @@
     "private": false,
     "license": "MIT",
     "description": "Next.js adapter for Nekuta — SSR/hydration support for the Pages Router and App Router.",
+    "publishConfig": {
+        "access": "public"
+    },
     "type": "module",
     "scripts": {
         "build": "tsc -b -v tsconfig.build.json",

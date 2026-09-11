@@ -4,6 +4,9 @@
     "private": false,
     "license": "MIT",
     "description": "ESLint rules for Nekuta — enforce a single defineStore() authoring style across a project.",
+    "publishConfig": {
+        "access": "public"
+    },
     "type": "module",
     "sideEffects": false,
     "main": "./dist/index.js",
