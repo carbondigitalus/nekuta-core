@@ -168,7 +168,7 @@ Before running `gulp release:publish --pkg <alias> --live` for the first real pu
 - `gulp release:version --pkg <alias> --type <bump>` then `gulp release:changelog --pkg <alias>` — version bump and generated `CHANGELOG.md` entry both look right for the package being released.
 - `gulp release:publish --pkg <alias>` (dry-run, the default) — validated before ever adding `--live`.
 
-### Critical files (existing, for reference/porting)
+## Critical files (existing, for reference/porting)
 
 - `nekuta-core/turbo.json`, `nekuta-core/package.json` — need the new task overrides and git-hooks config described above.
 - `nekuta-core/packages/utils/package.json` + `tsconfig.json` — template for `apps/nekuta`'s own config.
